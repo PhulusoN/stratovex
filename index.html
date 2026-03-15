@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stratovex</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Jost:wght@200;400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --red: #c0392b;
+      --dark: #0d0c0a;
+      --dark2: #111009;
+      --light: #f0ebe3;
+    }
+
+    html, body {
+      background: var(--dark);
+      overflow-x: hidden;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: fixed; top: 0; left: 0; width: 100%; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 3rem; height: 72px;
+      background: rgba(13,12,10,0.7);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(192,57,43,0.18);
+      opacity: 0; transform: translateY(-12px);
+      animation: navIn 0.7s 0.2s ease forwards;
+    }
+    @keyframes navIn { to { opacity:1; transform:translateY(0); } }
+
+    .nav__logo { display:flex; align-items:center; gap:10px; text-decoration:none; }
+    .nav__logo-icon { width:36px; height:36px; background:var(--red); display:flex; align-items:center; justify-content:center; font-family:'Anton',sans-serif; font-size:1.1rem; color:#fff; }
+    .nav__logo-text { font-family:'Anton',sans-serif; font-size:1.25rem; letter-spacing:0.08em; color:var(--light); text-transform:uppercase; }
+    .nav__links { display:flex; align-items:center; gap:2.4rem; list-style:none; }
+    .nav__links a { font-family:'Jost',sans-serif; font-weight:400; font-size:0.78rem; letter-spacing:0.18em; text-transform:uppercase; color:rgba(240,235,227,0.6); text-decoration:none; transition:color 0.25s; position:relative; }
+    .nav__links a::after { content:''; position:absolute; bottom:-3px; left:0; width:0; height:1px; background:var(--red); transition:width 0.3s ease; }
+    .nav__links a:hover { color:var(--light); }
+    .nav__links a:hover::after { width:100%; }
+    .nav__cta { font-family:'Jost',sans-serif; font-weight:400; font-size:0.75rem; letter-spacing:0.2em; text-transform:uppercase; color:#fff; text-decoration:none; padding:0.55rem 1.5rem; background:var(--red); border:1px solid var(--red); transition:background 0.25s, color 0.25s; }
+    .nav__cta:hover { background:transparent; color:var(--red); }
+
+    /* ── HAMBURGER ── */
+    .nav__hamburger { display:none; flex-direction:column; justify-content:center; gap:5px; cursor:pointer; background:none; border:none; padding:6px; z-index:300; }
+    .nav__hamburger span { display:block; width:24px; height:2px; background:var(--light); transition:transform 0.35s ease, opacity 0.35s ease; transform-origin:center; }
+    .nav__hamburger.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+    .nav__hamburger.open span:nth-child(2) { opacity:0; transform:scaleX(0); }
+    .nav__hamburger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+
+    /* ── MOBILE DRAWER ── */
+    .nav__drawer { position:fixed; top:72px; left:0; width:100%; height:calc(100vh - 72px); background:rgba(10,9,8,0.98); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2.2rem; opacity:0; pointer-events:none; transform:translateY(-16px); transition:opacity 0.35s ease, transform 0.35s ease; z-index:200; border-top:1px solid rgba(192,57,43,0.25); }
+    .nav__drawer.open { opacity:1; pointer-events:all; transform:translateY(0); }
+    .nav__drawer a { font-family:'Anton',sans-serif; font-size:clamp(2rem,7vw,3rem); letter-spacing:0.06em; text-transform:uppercase; color:var(--light); text-decoration:none; transition:color 0.2s; position:relative; }
+    .nav__drawer a::after { content:''; position:absolute; bottom:-4px; left:0; width:0; height:2px; background:var(--red); transition:width 0.3s ease; }
+    .nav__drawer a:hover { color:var(--red); }
+    .nav__drawer a:hover::after { width:100%; }
+    .nav__drawer .drawer__cta { font-family:'Jost',sans-serif; font-size:0.82rem; letter-spacing:0.22em; font-weight:400; color:#fff; background:var(--red); border:1px solid var(--red); padding:0.9rem 3rem; transition:background 0.25s, color 0.25s; margin-top:0.6rem; }
+    .nav__drawer .drawer__cta:hover { background:transparent; color:var(--red); }
+    .nav__drawer .drawer__cta::after { display:none; }
+
+    @media(max-width:768px){ nav { padding:0 1.5rem; } .nav__links, .nav__cta { display:none; } .nav__hamburger { display:flex; } }
+
+    /* ── HERO ── */
+    .hero { position:relative; width:100%; height:100vh; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+    .hero__bg { position:absolute; inset:0; z-index:0; }
+
+    /* SLIDE — faster fade: 0.9s, loops every 3s */
+    .hero__slide {
+      position:absolute; inset:0;
+      background-size:cover; background-position:center 40%;
+      filter:brightness(0.35) saturate(0.65);
+      opacity:0;
+      transition:opacity 0.9s ease;
+    }
+    .hero__slide.active { opacity:1; }
+
+    .hero__vignette { position:absolute; inset:0; z-index:1; background:radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.78) 100%); pointer-events:none; }
+    .hero__content { position:relative; z-index:2; text-align:center; padding:0 2rem; max-width:960px; }
+    .hero__headline { font-family:'Anton',sans-serif; font-size:clamp(3.5rem,10vw,9rem); line-height:0.95; color:var(--red); letter-spacing:0.03em; text-transform:uppercase; min-height:1em; }
+    .cursor { display:inline-block; width:4px; height:0.8em; background:var(--red); margin-left:5px; vertical-align:middle; animation:blink 0.9s step-end infinite; }
+    @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
+    .tagline-wrap { margin-top:2rem; height:2.2rem; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+    .tagline { font-family:'Jost',sans-serif; font-weight:200; font-size:clamp(0.75rem,2vw,1rem); letter-spacing:0.28em; text-transform:uppercase; color:rgba(240,235,227,0.7); opacity:0; transform:translateY(14px); transition:opacity 0.5s ease, transform 0.5s ease; white-space:nowrap; }
+    .tagline.visible { opacity:1; transform:translateY(0); }
+    .tagline.exit    { opacity:0; transform:translateY(-14px); }
+    .hero__divider { width:0; height:1px; background:var(--red); margin:1.4rem auto 0; transition:width 1s ease; }
+    .hero__divider.open { width:120px; }
+
+    /* Slide dots */
+    .hero__dots { position:absolute; bottom:5.5rem; left:50%; transform:translateX(-50%); display:flex; gap:8px; z-index:3; }
+    .hero__dot { width:6px; height:6px; border-radius:50%; background:rgba(240,235,227,0.3); border:1px solid rgba(240,235,227,0.4); cursor:pointer; transition:background 0.3s, transform 0.3s; }
+    .hero__dot.active { background:var(--red); border-color:var(--red); transform:scale(1.3); }
+
+    /* Scroll arrow */
+    .scroll-arrow { position:absolute; bottom:2.2rem; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:6px; opacity:0; animation:fadeUp 0.8s 4s ease forwards; cursor:pointer; text-decoration:none; z-index:3; }
+    .scroll-arrow span { font-size:0.6rem; letter-spacing:0.25em; text-transform:uppercase; color:rgba(240,235,227,0.35); font-family:'Jost',sans-serif; }
+    .scroll-arrow svg { animation:bounce 2s 4.5s ease-in-out infinite; }
+    @keyframes bounce { 0%,100%{transform:translateY(0);} 50%{transform:translateY(6px);} }
+    @keyframes fadeUp { to { opacity:1; transform:translateX(-50%) translateY(0); } }
+
+    /* ── SERVICES ── */
+    #services { padding:7rem 6vw; background:var(--dark); border-top:1px solid rgba(192,57,43,0.15); }
+    .services__header { display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:4rem; flex-wrap:wrap; gap:1.5rem; }
+    .services__eyebrow { font-size:0.68rem; letter-spacing:0.4em; text-transform:uppercase; color:var(--red); margin-bottom:0.9rem; display:block; font-family:'Jost',sans-serif; }
+    .services__heading { font-family:'Anton',sans-serif; font-size:clamp(2.2rem,5vw,4.5rem); text-transform:uppercase; line-height:0.92; letter-spacing:0.02em; color:var(--light); }
+    .services__heading span { color:var(--red); }
+    .services__sub { max-width:320px; font-size:0.9rem; line-height:1.75; color:rgba(240,235,227,0.45); font-family:'Jost',sans-serif; font-weight:200; }
+    .services__grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:1px; background:rgba(192,57,43,0.15); border:1px solid rgba(192,57,43,0.15); }
+    .service-card { background:#100f0d; padding:2.6rem 2.2rem; cursor:pointer; position:relative; overflow:hidden; min-height:320px; display:flex; flex-direction:column; justify-content:flex-end; }
+    .service-card__bg { position:absolute; inset:0; background-size:cover; background-position:center; filter:brightness(0.45) saturate(0.8); transition:transform 0.6s ease, filter 0.4s ease; z-index:0; }
+    .service-card:hover .service-card__bg { transform:scale(1.06); filter:brightness(0.38) saturate(0.75); }
+    .service-card::before { content:''; position:absolute; inset:0; background:linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.35) 45%, rgba(0,0,0,0.0) 100%); z-index:1; transition:background 0.4s ease; }
+    .service-card:hover::before { background:linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.45) 50%, rgba(0,0,0,0.05) 100%); }
+    .service-card::after { content:''; position:absolute; bottom:0; left:0; width:0; height:3px; background:var(--red); transition:width 0.4s ease; z-index:3; }
+    .service-card:hover::after { width:100%; }
+    .service-card__icon, .service-card__title, .service-card__blurb, .service-card__more { position:relative; z-index:2; }
+    .service-card__icon { width:44px; height:44px; margin-bottom:1.6rem; color:var(--red); }
+    .service-card__title { font-family:'Anton',sans-serif; font-size:1.2rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--light); margin-bottom:0.8rem; }
+    .service-card__blurb { font-size:0.85rem; line-height:1.7; color:rgba(240,235,227,0.75); font-family:'Jost',sans-serif; font-weight:200; }
+    .service-card__more { display:inline-flex; align-items:center; gap:6px; margin-top:1.4rem; font-size:0.72rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--red); font-family:'Jost',sans-serif; transition:gap 0.2s; }
+    .service-card:hover .service-card__more { gap:10px; }
+
+    /* ── STATS BAR ── */
+    .stats-bar { display:grid; grid-template-columns:1fr auto 1fr auto 1fr auto 1fr; align-items:center; margin-top:1px; background:rgba(192,57,43,0.08); border:1px solid rgba(192,57,43,0.15); border-top:none; padding:2.8rem 4rem; }
+    .stats-bar__item { display:flex; flex-direction:column; align-items:center; gap:0.5rem; text-align:center; }
+    .stats-bar__number-wrap { display:flex; align-items:baseline; gap:2px; }
+    .stats-bar__number { font-family:'Anton',sans-serif; font-size:clamp(2.4rem,4vw,3.8rem); line-height:1; color:var(--red); letter-spacing:-0.02em; }
+    .stats-bar__suffix { font-family:'Anton',sans-serif; font-size:clamp(1.4rem,2.5vw,2rem); color:var(--red); line-height:1; }
+    .stats-bar__label { font-family:'Jost',sans-serif; font-weight:200; font-size:0.78rem; letter-spacing:0.18em; text-transform:uppercase; color:rgba(240,235,227,0.5); }
+    .stats-bar__divider { width:1px; height:48px; background:rgba(192,57,43,0.2); margin:0 2rem; }
+    @media(max-width:768px){ .stats-bar { grid-template-columns:1fr 1fr; grid-template-rows:auto auto; gap:2.2rem 0; padding:2.4rem 2rem; } .stats-bar__divider { display:none; } }
+    @media(max-width:400px){ .stats-bar { grid-template-columns:1fr; } }
+
+    /* ── WHY US ── */
+#whyus { padding:7rem 6vw; background:#1c1c1c; border-top:1px solid rgba(192,57,43,0.15); position:relative; overflow:hidden; }
+    .whyus__ghost { position:absolute; top:-0.1em; right:4vw; font-family:'Anton',sans-serif; font-size:clamp(10rem,22vw,18rem); color:rgba(43, 177, 192, 0.04); line-height:1; pointer-events:none; user-select:none; letter-spacing:-0.02em; }
+    .whyus__inner { display:grid; grid-template-columns:1fr 1fr; gap:5rem; align-items:start; position:relative; z-index:1; }
+    .whyus__eyebrow { font-size:0.68rem; letter-spacing:0.4em; text-transform:uppercase; color:var(--red); margin-bottom:1rem; display:block; font-family:'Jost',sans-serif; }
+    .whyus__heading { font-family:'Anton',sans-serif; font-size:clamp(2.8rem,6vw,5.5rem); text-transform:uppercase; line-height:0.92; letter-spacing:0.02em; color:var(--light); margin-bottom:1.8rem; }
+    .whyus__heading span { color:var(--red); }
+    .whyus__tagline { font-size:0.95rem; line-height:1.8; color:rgba(240,235,227,0.45); font-family:'Jost',sans-serif; font-weight:200; max-width:360px; }
+    .whyus__items { display:flex; flex-direction:column; }
+    .whyus__item { display:flex; align-items:flex-start; gap:1.4rem; padding:1.8rem 0; border-bottom:1px solid rgba(192,57,43,0.12); transition:background 0.3s; }
+    .whyus__item:first-child { border-top:1px solid rgb(255, 255, 255); }
+    .whyus__item-icon { width:44px; height:44px; border:1px solid rgb(255, 25, 0); display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background 0.3s, border-color 0.3s; }
+    .whyus__item:hover .whyus__item-icon { background:var(--red); border-color:var(--red); }
+    .whyus__item-icon svg { width:20px; height:20px; color:var(--red); transition:color 0.3s; }
+    .whyus__item:hover .whyus__item-icon svg { color:#fff; }
+    .whyus__item-title { font-family:'Anton',sans-serif; font-size:1.05rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--light); margin-bottom:0.45rem; }
+    .whyus__item-desc { font-size:0.88rem; line-height:1.75; color:rgba(240,235,227,0.5); font-family:'Jost',sans-serif; font-weight:200; }
+    @media(max-width:900px){ .whyus__inner { grid-template-columns:1fr; gap:3rem; } }
+
+    /* ── REVIEWS ── */
+    #reviews { padding:7rem 6vw; background:var(--dark); border-top:1px solid rgba(192,57,43,0.15); }
+    .reviews__header { text-align:center; margin-bottom:4rem; }
+    .reviews__eyebrow { font-size:0.68rem; letter-spacing:0.4em; text-transform:uppercase; color:var(--red); margin-bottom:1rem; display:block; font-family:'Jost',sans-serif; }
+    .reviews__heading { font-family:'Anton',sans-serif; font-size:clamp(2.2rem,5vw,4rem); text-transform:uppercase; line-height:0.92; color:var(--light); }
+    .reviews__heading span { color:var(--red); }
+    .reviews__grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:1px; background:rgba(192,57,43,0.12); border:1px solid rgba(192,57,43,0.12); }
+    .review-card { background:#0f0e0c; padding:2.4rem 2rem; position:relative; transition:background 0.3s; }
+    .review-card:hover { background:#161412; }
+    .review-card::before { content:''; position:absolute; top:0; left:0; width:3px; height:0; background:var(--red); transition:height 0.4s ease; }
+    .review-card:hover::before { height:100%; }
+    .review-card__stars { display:flex; gap:3px; margin-bottom:1.2rem; }
+    .review-card__stars svg { width:14px; height:14px; fill:var(--red); }
+    .review-card__quote { font-size:2.5rem; line-height:1; color:rgba(192,57,43,0.25); font-family:'Anton',sans-serif; margin-bottom:0.6rem; }
+    .review-card__text { font-size:0.9rem; line-height:1.8; color:rgba(240,235,227,0.6); font-family:'Jost',sans-serif; font-weight:200; margin-bottom:1.6rem; font-style:italic; }
+    .review-card__author { display:flex; align-items:center; gap:0.9rem; }
+    .review-card__avatar { width:38px; height:38px; border-radius:50%; background:var(--red); display:flex; align-items:center; justify-content:center; font-family:'Anton',sans-serif; font-size:0.75rem; color:#fff; flex-shrink:0; }
+    .review-card__name { font-family:'Jost',sans-serif; font-weight:400; font-size:0.88rem; color:var(--light); }
+    .review-card__role { font-family:'Jost',sans-serif; font-weight:200; font-size:0.75rem; color:rgba(240,235,227,0.4); margin-top:2px; }
+
+    /* ── GLASS MODAL ── */
+    .modal-overlay { position:fixed; inset:0; z-index:500; background:rgba(0,0,0,0.6); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); display:flex; align-items:center; justify-content:center; padding:2rem; opacity:0; pointer-events:none; transition:opacity 0.3s ease; }
+    .modal-overlay.open { opacity:1; pointer-events:all; }
+    .modal { background:rgba(255,255,255,0.05); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.12); box-shadow:0 8px 48px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08); max-width:560px; width:100%; padding:3rem; position:relative; transform:translateY(24px) scale(0.97); transition:transform 0.35s ease; border-radius:2px; }
+    .modal-overlay.open .modal { transform:translateY(0) scale(1); }
+    .modal__close { position:absolute; top:1.2rem; right:1.4rem; background:none; border:none; cursor:pointer; color:rgba(240,235,227,0.5); font-size:1.4rem; line-height:1; transition:color 0.2s; }
+    .modal__close:hover { color:var(--red); }
+    .modal__icon { width:40px; height:40px; color:var(--red); margin-bottom:1.4rem; }
+    .modal__title { font-family:'Anton',sans-serif; font-size:clamp(1.5rem,4vw,2.2rem); text-transform:uppercase; letter-spacing:0.03em; color:#fff; margin-bottom:1.2rem; }
+    .modal__divider { width:48px; height:2px; background:var(--red); margin-bottom:1.5rem; }
+    .modal__body { font-size:0.92rem; line-height:1.8; color:rgba(255,255,255,0.65); font-family:'Jost',sans-serif; font-weight:200; margin-bottom:1.6rem; }
+    .modal__features { list-style:none; display:flex; flex-direction:column; gap:0.55rem; margin-bottom:2rem; }
+    .modal__features li { font-size:0.82rem; letter-spacing:0.05em; color:rgba(255,255,255,0.6); font-family:'Jost',sans-serif; padding-left:1.2rem; position:relative; }
+    .modal__features li::before { content:''; position:absolute; left:0; top:50%; transform:translateY(-50%); width:6px; height:6px; border:1px solid var(--red); background:transparent; }
+    .modal__cta { display:inline-block; font-size:0.75rem; letter-spacing:0.2em; text-transform:uppercase; color:#fff; text-decoration:none; padding:0.7rem 2rem; background:var(--red); border:1px solid var(--red); font-family:'Jost',sans-serif; transition:background 0.25s, color 0.25s; }
+    .modal__cta:hover { background:transparent; color:var(--red); }
+
+    /* ── QUOTE ── */
+    #quote { padding:7rem 6vw; background:#0a0908; border-top:1px solid rgba(192,57,43,0.15); }
+    .quote__inner { max-width:760px; margin:0 auto; text-align:center; }
+    .quote__eyebrow { font-size:0.68rem; letter-spacing:0.4em; text-transform:uppercase; color:var(--red); margin-bottom:1rem; display:block; font-family:'Jost',sans-serif; }
+    .quote__heading { font-family:'Anton',sans-serif; font-size:clamp(2rem,5vw,4rem); text-transform:uppercase; line-height:0.95; color:var(--light); margin-bottom:1rem; }
+    .quote__heading span { color:var(--red); }
+    .quote__sub { font-size:0.92rem; line-height:1.75; color:rgba(240,235,227,0.45); font-family:'Jost',sans-serif; font-weight:200; margin-bottom:3.5rem; }
+    .quote__form { display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; text-align:left; }
+    .quote__form .full { grid-column:1/-1; }
+    .quote__field { display:flex; flex-direction:column; gap:0.45rem; }
+    .quote__field label { font-size:0.68rem; letter-spacing:0.25em; text-transform:uppercase; color:rgba(240,235,227,0.4); font-family:'Jost',sans-serif; }
+    .quote__field input, .quote__field select, .quote__field textarea { background:rgba(255,255,255,0.04); border:1px solid rgba(192,57,43,0.25); color:var(--light); font-family:'Jost',sans-serif; font-weight:200; font-size:0.9rem; padding:0.75rem 1rem; outline:none; transition:border-color 0.25s, background 0.25s; width:100%; border-radius:0; -webkit-appearance:none; }
+    .quote__field select option { background:#1a1714; }
+    .quote__field input:focus, .quote__field select:focus, .quote__field textarea:focus { border-color:var(--red); background:rgba(192,57,43,0.06); }
+    .quote__field textarea { resize:vertical; min-height:120px; }
+    .quote__submit { grid-column:1/-1; margin-top:0.5rem; padding:0.9rem 3rem; background:var(--red); border:1px solid var(--red); color:#fff; font-family:'Jost',sans-serif; font-weight:400; font-size:0.8rem; letter-spacing:0.22em; text-transform:uppercase; cursor:pointer; transition:background 0.25s, color 0.25s; width:100%; }
+    .quote__submit:hover { background:transparent; color:var(--red); }
+
+    /* ── FOOTER ── */
+    footer { background:#060504; border-top:1px solid rgba(192,57,43,0.2); padding:5rem 6vw 2.5rem; }
+    .footer__top { display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:3rem; padding-bottom:4rem; border-bottom:1px solid rgba(192,57,43,0.12); }
+    .footer__logo { display:flex; align-items:center; gap:10px; text-decoration:none; margin-bottom:1.2rem; }
+    .footer__logo-icon { width:36px; height:36px; background:var(--red); display:flex; align-items:center; justify-content:center; font-family:'Anton',sans-serif; font-size:1.1rem; color:#fff; flex-shrink:0; }
+    .footer__logo-text { font-family:'Anton',sans-serif; font-size:1.2rem; letter-spacing:0.08em; color:var(--light); text-transform:uppercase; }
+    .footer__brand-desc { font-size:0.85rem; line-height:1.8; color:rgba(240,235,227,0.4); font-family:'Jost',sans-serif; font-weight:200; max-width:260px; }
+    .footer__col-title { font-family:'Anton',sans-serif; font-size:0.85rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--light); margin-bottom:1.4rem; }
+    .footer__links { list-style:none; display:flex; flex-direction:column; gap:0.7rem; }
+    .footer__links a { font-family:'Jost',sans-serif; font-weight:200; font-size:0.85rem; color:rgba(240,235,227,0.45); text-decoration:none; transition:color 0.2s; letter-spacing:0.04em; }
+    .footer__links a:hover { color:var(--red); }
+    .footer__contact-item { display:flex; align-items:flex-start; gap:0.7rem; margin-bottom:0.9rem; }
+    .footer__contact-item svg { width:16px; height:16px; color:var(--red); flex-shrink:0; margin-top:2px; }
+    .footer__contact-item span { font-family:'Jost',sans-serif; font-weight:200; font-size:0.85rem; color:rgba(240,235,227,0.45); line-height:1.6; }
+    .footer__contact-item a { color:rgba(240,235,227,0.45); text-decoration:none; transition:color 0.2s; }
+    .footer__contact-item a:hover { color:var(--red); }
+    .footer__socials { display:flex; gap:0.8rem; margin-top:1.6rem; }
+    .footer__social { width:36px; height:36px; border:1px solid rgba(238, 24, 0, 0.25); display:flex; align-items:center; justify-content:center; text-decoration:none; color:rgba(240,235,227,0.45); transition:background 0.25s, border-color 0.25s, color 0.25s; }
+    .footer__social:hover { background:var(--red); border-color:var(--red); color:#fff; }
+    .footer__social svg { width:16px; height:16px; }
+    .footer__bottom { display:flex; align-items:center; justify-content:space-between; padding-top:2rem; flex-wrap:wrap; gap:1rem; }
+    .footer__copy { font-family:'Jost',sans-serif; font-weight:200; font-size:0.78rem; color:rgba(240,235,227,0.25); letter-spacing:0.08em; }
+    .footer__copy span { color:var(--red); }
+    .footer__tagline { font-family:'Anton',sans-serif; font-size:0.75rem; letter-spacing:0.15em; text-transform:uppercase; color:rgba(240,235,227,0.15); }
+    @media(max-width:900px){ .footer__top { grid-template-columns:1fr 1fr; } }
+    @media(max-width:560px){ .footer__top { grid-template-columns:1fr; } .footer__bottom { flex-direction:column; align-items:flex-start; } }
+
+    /* ── WHATSAPP ── */
+    .whatsapp-btn { position:fixed; bottom:2rem; right:2rem; z-index:400; width:56px; height:56px; border-radius:50%; background:#25D366; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 20px rgba(37,211,102,0.4); text-decoration:none; transition:transform 0.25s ease, box-shadow 0.25s ease; animation:waBounce 2.5s 5s ease-in-out infinite; }
+    .whatsapp-btn:hover { transform:scale(1.12); box-shadow:0 6px 28px rgba(37,211,102,0.6); animation:none; }
+    .whatsapp-btn svg { width:30px; height:30px; }
+    @keyframes waBounce { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-6px);} }
+    .whatsapp-btn::before { content:'Chat with us'; position:absolute; right:calc(100% + 12px); background:rgba(13,12,10,0.9); color:var(--light); font-family:'Jost',sans-serif; font-size:0.72rem; letter-spacing:0.1em; white-space:nowrap; padding:0.4rem 0.9rem; border:1px solid rgba(37,211,102,0.3); opacity:0; pointer-events:none; transform:translateX(6px); transition:opacity 0.2s, transform 0.2s; }
+    .whatsapp-btn:hover::before { opacity:1; transform:translateX(0); }
+
+    /* ── REVEAL ── */
+    .reveal { opacity:0; transform:translateY(28px); transition:opacity 0.75s ease, transform 0.75s ease; }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+    .reveal-stagger > * { opacity:0; transform:translateY(20px); transition:opacity 0.6s ease, transform 0.6s ease; }
+    .reveal-stagger.visible > *:nth-child(1){ opacity:1;transform:translateY(0);transition-delay:0s; }
+    .reveal-stagger.visible > *:nth-child(2){ opacity:1;transform:translateY(0);transition-delay:0.08s; }
+    .reveal-stagger.visible > *:nth-child(3){ opacity:1;transform:translateY(0);transition-delay:0.16s; }
+    .reveal-stagger.visible > *:nth-child(4){ opacity:1;transform:translateY(0);transition-delay:0.24s; }
+    .reveal-stagger.visible > *:nth-child(5){ opacity:1;transform:translateY(0);transition-delay:0.32s; }
+
+    @media(max-width:600px){ .services__header { flex-direction:column; align-items:flex-start; } .modal { padding:2rem 1.6rem; } .quote__form { grid-template-columns:1fr; } .quote__form .full { grid-column:1; } }
+
+    /* ── ICON ANIMATIONS ── */
+    @keyframes cctvPan { 0%{transform:rotate(-25deg);} 50%{transform:rotate(25deg);} 100%{transform:rotate(-25deg);} }
+    .icon-cctv .cctv-body { transform-box:fill-box; transform-origin:50% 100%; }
+    .service-card:hover .icon-cctv .cctv-body { animation:cctvPan 2s ease-in-out infinite; }
+    @keyframes pulseRing { 0%{r:4;opacity:0.9;} 100%{r:11;opacity:0;} }
+    @keyframes btnPress  { 0%,100%{r:4;} 40%{r:3.2;} }
+    .service-card:hover .intercom-pulse { animation:pulseRing 1.2s ease-out infinite; }
+    .service-card:hover .intercom-btn   { animation:btnPress  1.2s ease-in-out infinite; }
+    @keyframes shackleOpen { 0%,100%{transform:translateY(0);} 40%{transform:translateY(-6px);} 60%{transform:translateY(-6px);} }
+    .lock-shackle { transform-box:fill-box; transform-origin:50% 100%; }
+    .service-card:hover .lock-shackle { animation:shackleOpen 1.8s ease-in-out infinite; }
+    .net-pulse-1, .net-pulse-2 { opacity:0; }
+    .service-card:hover .net-pulse-1 { opacity:1; }
+    .service-card:hover .net-pulse-2 { opacity:0.7; }
+    @keyframes bracketLeft  { 0%,100%{transform:translateX(0);}  50%{transform:translateX(-5px);} }
+    @keyframes bracketRight { 0%,100%{transform:translateX(0);}  50%{transform:translateX(5px);} }
+    @keyframes slashFade    { 0%,100%{opacity:0.6;} 50%{opacity:1;} }
+    .bracket-left, .bracket-right { transform-box:fill-box; }
+    .service-card:hover .bracket-left  { animation:bracketLeft  1s ease-in-out infinite; }
+    .service-card:hover .bracket-right { animation:bracketRight 1s ease-in-out infinite; }
+    .service-card:hover .bracket-slash { animation:slashFade    1s ease-in-out infinite; }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <a href="#" class="nav__logo" onclick="scrollToTop(event)">
+    <div class="nav__logo-icon">S</div>
+    <span class="nav__logo-text">Stratovex</span>
+  </a>
+  <ul class="nav__links">
+    <li><a href="#" onclick="scrollToTop(event)">Home</a></li>
+    <li><a href="aboutus.html">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#quote">Contact</a></li>
+  </ul>
+  <a href="#quote" class="nav__cta">Get a Quote</a>
+  <button class="nav__hamburger" id="hamburger" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE DRAWER -->
+<div class="nav__drawer" id="drawer">
+  <a href="#" onclick="closeDrawer(); scrollToTop(event)">Home</a>
+  <a href="aboutus.html" onclick="closeDrawer()">About</a>
+  <a href="#services" onclick="closeDrawer()">Services</a>
+  <a href="#whyus" onclick="closeDrawer()">Why Us</a>
+  <a href="#quote" onclick="closeDrawer()">Contact</a>
+  <a href="#quote" class="drawer__cta" onclick="closeDrawer()">Get a Quote</a>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero__bg">
+    <!-- ✏️ Replace filenames with your own images -->
+    <div class="hero__slide active" style="background-image:url('cctv.jpg')"></div>
+    <div class="hero__slide"        style="background-image:url('hero2.jpg')"></div>
+    <div class="hero__slide"        style="background-image:url('hero3.jpg')"></div>
+    <div class="hero__slide"        style="background-image:url('hero4.jpg')"></div>
+    <div class="hero__slide"        style="background-image:url('hero5.jpg')"></div>
+  </div>
+  <div class="hero__vignette"></div>
+  <div class="hero__content">
+    <h1 class="hero__headline"><span id="typed"></span><span class="cursor" id="cursor"></span></h1>
+    <div class="hero__divider" id="divider"></div>
+    <div class="tagline-wrap"><p class="tagline" id="tagline"></p></div>
+  </div>
+  <div class="hero__dots" id="heroDots"></div>
+  <a class="scroll-arrow" href="#services">
+    <span>Our Services</span>
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <path d="M10 4v12M4 10l6 6 6-6" stroke="#c0392b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </a>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="services__header reveal">
+    <div>
+      <span class="services__eyebrow">What We Do</span>
+      <h2 class="services__heading">Our<br><span>Services</span></h2>
+    </div>
+    <p class="services__sub">Tailored technology and security solutions for residential, commercial, and industrial clients.</p>
+  </div>
+  <div class="services__grid reveal-stagger">
+    <div class="service-card" onclick="openModal('cctv')">
+      <div class="service-card__bg" style="background-image:url('cctv.jpg')"></div>
+      <svg class="service-card__icon icon-cctv" viewBox="0 0 44 44" fill="none">
+        <line x1="22" y1="36" x2="22" y2="28" stroke="#c0392b" stroke-width="1.8" stroke-linecap="round"/>
+        <g class="cctv-body" transform-origin="22 28">
+          <rect x="10" y="18" width="16" height="10" rx="2" fill="none" stroke="#c0392b" stroke-width="1.6"/>
+          <rect x="26" y="20" width="7" height="6" rx="1" fill="none" stroke="#c0392b" stroke-width="1.5"/>
+          <circle cx="29.5" cy="23" r="1.5" fill="#c0392b" opacity="0.6"/>
+          <circle cx="13" cy="23" r="1" fill="#c0392b" opacity="0.8"/>
+        </g>
+      </svg>
+      <h3 class="service-card__title">CCTV Installation</h3>
+      <p class="service-card__blurb">High-definition surveillance with strategic placement for maximum coverage and mobile integration.</p>
+      <span class="service-card__more">Learn more →</span>
+    </div>
+    <div class="service-card" onclick="openModal('intercom')">
+      <div class="service-card__bg" style="background-image:url('intercom.jpg')"></div>
+      <svg class="service-card__icon icon-intercom" viewBox="0 0 44 44" fill="none">
+        <rect x="12" y="6" width="20" height="32" rx="3" stroke="#c0392b" stroke-width="1.6"/>
+        <line x1="17" y1="13" x2="27" y2="13" stroke="#c0392b" stroke-width="1.3" stroke-linecap="round"/>
+        <line x1="17" y1="17" x2="27" y2="17" stroke="#c0392b" stroke-width="1.3" stroke-linecap="round"/>
+        <circle class="intercom-btn" cx="22" cy="28" r="4" stroke="#c0392b" stroke-width="1.6"/>
+        <circle class="intercom-pulse" cx="22" cy="28" r="4" stroke="#c0392b" stroke-width="1.2" opacity="0"/>
+      </svg>
+      <h3 class="service-card__title">Intercom Systems</h3>
+      <p class="service-card__blurb">Audio and video intercom solutions with seamless communication between entry points and offices.</p>
+      <span class="service-card__more">Learn more →</span>
+    </div>
+    <div class="service-card" onclick="openModal('access')">
+      <div class="service-card__bg" style="background-image:url('access.jpg')"></div>
+      <svg class="service-card__icon icon-lock" viewBox="0 0 44 44" fill="none">
+        <rect x="10" y="20" width="24" height="17" rx="3" stroke="#c0392b" stroke-width="1.6"/>
+        <circle cx="22" cy="27" r="2.5" stroke="#c0392b" stroke-width="1.4"/>
+        <line x1="22" y1="29.5" x2="22" y2="33" stroke="#c0392b" stroke-width="1.4" stroke-linecap="round"/>
+        <path class="lock-shackle" d="M15 20V15a7 7 0 0114 0v5" stroke="#c0392b" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+      </svg>
+      <h3 class="service-card__title">Access Control Solutions</h3>
+      <p class="service-card__blurb">Biometric, card, and keypad entry systems — scalable from small offices to large facilities with full audit trails.</p>
+      <span class="service-card__more">Learn more →</span>
+    </div>
+    <div class="service-card" onclick="openModal('networking')">
+      <div class="service-card__bg" style="background-image:url('network.jpg')"></div>
+      <svg class="service-card__icon icon-network" viewBox="0 0 44 44" fill="none">
+        <rect x="1" y="4" width="10" height="7" rx="1.5" stroke="#c0392b" stroke-width="1.5"/>
+        <rect x="33" y="4" width="10" height="7" rx="1.5" stroke="#c0392b" stroke-width="1.5"/>
+        <rect x="17" y="33" width="10" height="7" rx="1.5" stroke="#c0392b" stroke-width="1.5"/>
+        <line x1="6" y1="11" x2="6" y2="26" stroke="#c0392b" stroke-width="1.3" opacity="0.4"/>
+        <line x1="38" y1="11" x2="38" y2="26" stroke="#c0392b" stroke-width="1.3" opacity="0.4"/>
+        <line x1="6" y1="26" x2="38" y2="26" stroke="#c0392b" stroke-width="1.3" opacity="0.4"/>
+        <line x1="22" y1="26" x2="22" y2="33" stroke="#c0392b" stroke-width="1.3" opacity="0.4"/>
+        <circle class="net-pulse-1" r="2.5" fill="#c0392b"><animateMotion dur="1.4s" repeatCount="indefinite" begin="0s" path="M6,11 L6,26 L22,26 L22,33"/></circle>
+        <circle class="net-pulse-2" r="2.5" fill="#c0392b" opacity="0"><animateMotion dur="1.4s" repeatCount="indefinite" begin="0.7s" path="M38,11 L38,26 L22,26 L22,33"/></circle>
+      </svg>
+      <h3 class="service-card__title">IT Networking Services</h3>
+      <p class="service-card__blurb">Structured cabling, network design & optimization, plus proactive monitoring to keep performance high.</p>
+      <span class="service-card__more">Learn more →</span>
+    </div>
+    <div class="service-card" onclick="openModal('webdev')">
+      <div class="service-card__bg" style="background-image:url('web.jpg')"></div>
+      <svg class="service-card__icon icon-webdev" viewBox="0 0 44 44" fill="none">
+        <g class="bracket-left"><polyline points="18,10 10,22 18,34" stroke="#c0392b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>
+        <g class="bracket-right"><polyline points="26,10 34,22 26,34" stroke="#c0392b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>
+        <line class="bracket-slash" x1="24" y1="10" x2="20" y2="34" stroke="#c0392b" stroke-width="1.6" stroke-linecap="round" opacity="0.6"/>
+      </svg>
+      <h3 class="service-card__title">Web Development</h3>
+      <p class="service-card__blurb">Clean, fast, and effective websites and web apps built to represent your brand online.</p>
+      <span class="service-card__more">Learn more →</span>
+    </div>
+  </div>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar reveal">
+    <div class="stats-bar__item">
+      <div class="stats-bar__number-wrap"><span class="stats-bar__number" data-target="150">0</span><span class="stats-bar__suffix">+</span></div>
+      <span class="stats-bar__label">Projects Completed</span>
+    </div>
+    <div class="stats-bar__divider"></div>
+    <div class="stats-bar__item">
+      <div class="stats-bar__number-wrap"><span class="stats-bar__number" data-target="80">0</span><span class="stats-bar__suffix">+</span></div>
+      <span class="stats-bar__label">Clients Served</span>
+    </div>
+    <div class="stats-bar__divider"></div>
+    <div class="stats-bar__item">
+      <div class="stats-bar__number-wrap"><span class="stats-bar__number" data-target="5">0</span><span class="stats-bar__suffix">+</span></div>
+      <span class="stats-bar__label">Years Experience</span>
+    </div>
+    <div class="stats-bar__divider"></div>
+    <div class="stats-bar__item">
+      <div class="stats-bar__number-wrap"><span class="stats-bar__number" data-target="98">0</span><span class="stats-bar__suffix">%</span></div>
+      <span class="stats-bar__label">Client Satisfaction</span>
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section id="whyus">
+  <div class="whyus__ghost">02</div>
+  <div class="whyus__inner">
+    <div class="reveal">
+      <span class="whyus__eyebrow">Why Choose Us</span>
+      <h2 class="whyus__heading">Why<br><span>Us?</span></h2>
+      <p class="whyus__tagline">We don't just install systems — we build lasting solutions backed by expertise, care, and commitment to your success.</p>
+    </div>
+    <div class="whyus__items reveal">
+      <div class="whyus__item">
+        <div class="whyus__item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+        <div><h3 class="whyus__item-title">Expertise</h3><p class="whyus__item-desc">Certified technicians with hands-on experience in security and IT solutions — delivering results you can trust.</p></div>
+      </div>
+      <div class="whyus__item">
+        <div class="whyus__item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/><path d="M15.54 8.46a5 5 0 010 7.07M8.46 8.46a5 5 0 000 7.07"/></svg></div>
+        <div><h3 class="whyus__item-title">Customization</h3><p class="whyus__item-desc">Solutions tailored to your client budgets and site requirements — no one-size-fits-all approach here.</p></div>
+      </div>
+      <div class="whyus__item">
+        <div class="whyus__item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <div><h3 class="whyus__item-title">Reliability</h3><p class="whyus__item-desc">High-quality installations designed for long-term performance — built to last and engineered to perform.</p></div>
+      </div>
+      <div class="whyus__item">
+        <div class="whyus__item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg></div>
+        <div><h3 class="whyus__item-title">Support</h3><p class="whyus__item-desc">Ongoing maintenance and technical assistance — we stay with you long after the installation is done.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="reviews">
+  <div class="reviews__header reveal">
+    <span class="reviews__eyebrow">Client Feedback</span>
+    <h2 class="reviews__heading">What Our <span>Clients Say</span></h2>
+  </div>
+  <div class="reviews__grid reveal-stagger">
+    <div class="review-card">
+      <div class="review-card__stars"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+      <div class="review-card__quote">"</div>
+      <p class="review-card__text">Stratovex installed a full CCTV system across our warehouse. The team was professional, fast, and the cameras are crystal clear. Couldn't be happier.</p>
+      <div class="review-card__author"><div class="review-card__avatar">TM</div><div><p class="review-card__name">Thabo Mokoena</p><p class="review-card__role">Operations Manager · Manufacturing</p></div></div>
+    </div>
+    <div class="review-card">
+      <div class="review-card__stars"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+      <div class="review-card__quote">"</div>
+      <p class="review-card__text">Our office network was a mess. Stratovex redesigned the whole setup and everything runs flawlessly now. Their support after installation has been excellent.</p>
+      <div class="review-card__author"><div class="review-card__avatar">SN</div><div><p class="review-card__name">Sarah Nkosi</p><p class="review-card__role">IT Director · Financial Services</p></div></div>
+    </div>
+    <div class="review-card">
+      <div class="review-card__stars"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+      <div class="review-card__quote">"</div>
+      <p class="review-card__text">They built our website and handled our access control at the same time. One team, zero stress. Very professional from start to finish.</p>
+      <div class="review-card__author"><div class="review-card__avatar">LB</div><div><p class="review-card__name">Lebo Baloyi</p><p class="review-card__role">Owner · Retail Business</p></div></div>
+    </div>
+    <div class="review-card">
+      <div class="review-card__stars"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+      <div class="review-card__quote">"</div>
+      <p class="review-card__text">Intercoms, access control, and networking done in one visit. Stratovex was efficient, clean, and explained everything clearly. Will definitely use them again.</p>
+      <div class="review-card__author"><div class="review-card__avatar">KD</div><div><p class="review-card__name">Kagiso Dlamini</p><p class="review-card__role">Facilities Manager · Commercial Property</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- QUOTE -->
+<section id="quote">
+  <div class="quote__inner reveal">
+    <span class="quote__eyebrow">Get in Touch</span>
+    <h2 class="quote__heading">Request a<br><span>Quote</span></h2>
+    <p class="quote__sub">Tell us about your project and we'll get back to you within 24 hours with a tailored solution.</p>
+    <form class="quote__form" onsubmit="handleSubmit(event)">
+      <div class="quote__field"><label>Full Name</label><input type="text" placeholder="John Smith" required/></div>
+      <div class="quote__field"><label>Email Address</label><input type="email" placeholder="john@example.com" required/></div>
+      <div class="quote__field"><label>Phone Number</label><input type="tel" placeholder="+27 000 000 0000"/></div>
+      <div class="quote__field">
+        <label>Service Needed</label>
+        <select id="quoteService">
+          <option value="">Select a service…</option>
+          <option>CCTV Installation</option>
+          <option>Intercom Systems</option>
+          <option>Access Control Solutions</option>
+          <option>IT Networking Services</option>
+          <option>Web Development</option>
+          <option>Multiple / Other</option>
+        </select>
+      </div>
+      <div class="quote__field full"><label>Tell us about your project</label><textarea placeholder="Describe your site, requirements, or any questions…"></textarea></div>
+      <button type="submit" class="quote__submit">Send Request →</button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer__top">
+    <div>
+      <a href="#" class="footer__logo" onclick="scrollToTop(event)">
+        <div class="footer__logo-icon">S</div>
+        <span class="footer__logo-text">Stratovex</span>
+      </a>
+      <p class="footer__brand-desc">Forward-thinking technology and security solutions for residential, commercial, and industrial clients.</p>
+      <div class="footer__socials">
+        <a href="#" class="footer__social" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
+        <a href="#" class="footer__social" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/></svg></a>
+        <a href="#" class="footer__social" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg></a>
+        <a href="https://wa.me/YOUR_NUMBER" target="_blank" rel="noopener" class="footer__social" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+      </div>
+    </div>
+    <div>
+      <p class="footer__col-title">Quick Links</p>
+      <ul class="footer__links">
+        <li><a href="#" onclick="scrollToTop(event)">Home</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#whyus">Why Us</a></li>
+        <li><a href="#reviews">Reviews</a></li>
+        <li><a href="#quote">Get a Quote</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer__col-title">Services</p>
+      <ul class="footer__links">
+        <li><a href="#services" onclick="openModal('cctv')">CCTV Installation</a></li>
+        <li><a href="#services" onclick="openModal('intercom')">Intercom Systems</a></li>
+        <li><a href="#services" onclick="openModal('access')">Access Control</a></li>
+        <li><a href="#services" onclick="openModal('networking')">IT Networking</a></li>
+        <li><a href="#services" onclick="openModal('webdev')">Web Development</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer__col-title">Contact</p>
+      <div class="footer__contact-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.67A2 2 0 012 .18h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
+        <span><a href="tel:0722443902">0722443902</a></span>
+      </div>
+      <div class="footer__contact-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        <span><a href="mailto:stratovex.n@gmail.com">stratovex.n@gmail.com</a></span>
+      </div>
+      <div class="footer__contact-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span>Gauteng – Mpumalanga, South Africa</span>
+      </div>
+    </div>
+  </div>
+  <div class="footer__bottom">
+    <p class="footer__copy">© 2025 <span>Stratovex Pty Ltd</span>. All rights reserved.</p>
+    <p class="footer__tagline">Powering Trust Through Technology</p>
+  </div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal">
+    <button class="modal__close" onclick="closeModalDirect()">✕</button>
+    <svg class="modal__icon" id="modalIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></svg>
+    <h2 class="modal__title" id="modalTitle"></h2>
+    <div class="modal__divider"></div>
+    <p class="modal__body" id="modalBody"></p>
+    <ul class="modal__features" id="modalFeatures"></ul>
+    <a href="#quote" class="modal__cta" onclick="closeModalDirect()">Get a Quote</a>
+  </div>
+</div>
+
+<!-- WHATSAPP -->
+<a href="https://wa.me/YOUR_NUMBER" target="_blank" rel="noopener" class="whatsapp-btn" aria-label="Chat on WhatsApp">
+  <svg viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<script>
+  // ── HAMBURGER ─────────────────────────────────────────
+  const hamburger = document.getElementById('hamburger');
+  const drawer    = document.getElementById('drawer');
+  hamburger.addEventListener('click', () => {
+    const isOpen = drawer.classList.toggle('open');
+    hamburger.classList.toggle('open', isOpen);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  });
+  function closeDrawer() { drawer.classList.remove('open'); hamburger.classList.remove('open'); document.body.style.overflow = ''; }
+  function scrollToTop(e) { if(e) e.preventDefault(); closeDrawer(); window.scrollTo({ top:0, behavior:'smooth' }); }
+  window.addEventListener('resize', () => { if(window.innerWidth > 768) closeDrawer(); });
+
+  // ── SLIDESHOW — loops every 3s, fade 0.9s ─────────────
+  (function() {
+    const slides   = Array.from(document.querySelectorAll('.hero__slide'));
+    const dotsWrap = document.getElementById('heroDots');
+    let current    = 0;
+    let timer;
+
+    slides.forEach((_, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'hero__dot' + (i === 0 ? ' active' : '');
+      btn.setAttribute('aria-label', 'Slide ' + (i + 1));
+      btn.addEventListener('click', () => goTo(i));
+      dotsWrap.appendChild(btn);
+    });
+
+    function goTo(n) {
+      slides[current].classList.remove('active');
+      dotsWrap.children[current].classList.remove('active');
+      current = (n + slides.length) % slides.length;  // wraps back to 0 after last = loop
+      slides[current].classList.add('active');
+      dotsWrap.children[current].classList.add('active');
+    }
+
+    function startTimer() { timer = setInterval(() => goTo(current + 1), 3000); }  // 3s interval
+    function stopTimer()  { clearInterval(timer); }
+
+    startTimer();
+    document.getElementById('home').addEventListener('mouseenter', stopTimer);
+    document.getElementById('home').addEventListener('mouseleave', startTimer);
+  })();
+
+  // ── MODAL ─────────────────────────────────────────────
+  const services = {
+    cctv:       { title:'CCTV Installation',       icon:'<path d="M15 10l4.553-2.069A1 1 0 0121 8.87V15.13a1 1 0 01-1.447.9L15 14M3 8h12v8H3z"/><circle cx="7" cy="12" r="1"/>',                                                                                                                                               body:'High-definition surveillance systems professionally installed for your site. We handle strategic camera placement for maximum coverage, ensuring every angle is secured and monitored.',    features:['High-definition surveillance systems','Strategic camera placement for maximum coverage','Remote monitoring and mobile integration'] },
+    intercom:   { title:'Intercom Systems',         icon:'<rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="17" r="1"/><line x1="9" y1="6" x2="15" y2="6"/><line x1="9" y1="9" x2="15" y2="9"/>',                                                                                                         body:'Audio and video intercom solutions that keep your premises connected. We ensure seamless communication between entry points and offices, fully integrated with your access control systems.', features:['Audio and video intercom solutions','Seamless communication between entry points and offices','Integration with access control systems'] },
+    access:     { title:'Access Control Solutions', icon:'<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/><circle cx="12" cy="16" r="1"/>',                                                                                                                                                 body:'Scalable access control from small offices to large facilities. We deploy biometric, card, and keypad entry systems backed by full audit trails and reporting for complete accountability.',  features:['Biometric, card, and keypad entry systems','Scalable solutions for small offices to large facilities','Enhanced security with audit trails and reporting'] },
+    networking: { title:'IT Networking Services',   icon:'<rect x="2" y="3" width="6" height="4" rx="1"/><rect x="16" y="3" width="6" height="4" rx="1"/><rect x="9" y="17" width="6" height="4" rx="1"/><line x1="5" y1="7" x2="5" y2="14"/><line x1="19" y1="7" x2="19" y2="14"/><line x1="5" y1="14" x2="19" y2="14"/><line x1="12" y1="14" x2="12" y2="17"/>', body:'End-to-end network design, installation, and optimization for businesses that demand performance. We offer structured cabling, proactive monitoring, and ongoing troubleshooting.',          features:['Structured cabling (fiber, PoE, wireless alternatives)','Network design, installation, and optimization','Troubleshooting and proactive monitoring for performance'] },
+    webdev:     { title:'Web Development',          icon:'<polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>',                                                                                                                                                                                               body:'We build fast, modern, and professional websites and web applications that represent your brand and work hard for your business — from landing pages to full custom platforms.',           features:['Custom website design & development','Mobile-responsive & SEO-ready builds','E-commerce & booking systems','CMS integration (WordPress, etc.)','Hosting, maintenance & ongoing support'] }
+  };
+
+  function openModal(key) {
+    const s = services[key];
+    document.getElementById('modalTitle').textContent = s.title;
+    document.getElementById('modalIcon').innerHTML    = s.icon;
+    document.getElementById('modalBody').textContent  = s.body;
+    document.getElementById('modalFeatures').innerHTML = s.features.map(f => '<li>' + f + '</li>').join('');
+    const sel = document.getElementById('quoteService');
+    for(let i = 0; i < sel.options.length; i++){ if(sel.options[i].text === s.title){ sel.selectedIndex = i; break; } }
+    document.getElementById('modalOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal(e)     { if(e.target === document.getElementById('modalOverlay')) closeModalDirect(); }
+  function closeModalDirect(){ document.getElementById('modalOverlay').classList.remove('open'); document.body.style.overflow = ''; }
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') closeModalDirect(); });
+
+  // ── QUOTE ─────────────────────────────────────────────
+  function handleSubmit(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('.quote__submit');
+    btn.textContent = '✓ Request Sent!';
+    btn.style.background = '#27ae60'; btn.style.borderColor = '#27ae60';
+    setTimeout(() => { btn.textContent = 'Send Request →'; btn.style.background = ''; btn.style.borderColor = ''; e.target.reset(); }, 3000);
+  }
+
+  // ── STATS COUNT-UP ────────────────────────────────────
+  const statObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if(!entry.isIntersecting) return;
+      entry.target.querySelectorAll('.stats-bar__number').forEach(el => {
+        const target = +el.dataset.target;
+        const step = 16;
+        const increment = target / (1800 / step);
+        let current = 0;
+        const t = setInterval(() => {
+          current += increment;
+          if(current >= target){ el.textContent = target; clearInterval(t); }
+          else { el.textContent = Math.floor(current); }
+        }, step);
+      });
+      statObserver.unobserve(entry.target);
+    });
+  }, { threshold: 0.4 });
+  const statsBar = document.querySelector('.stats-bar');
+  if(statsBar) statObserver.observe(statsBar);
+
+  // ── SCROLL REVEAL ─────────────────────────────────────
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal, .reveal-stagger').forEach(el => observer.observe(el));
+
+  // ── TYPEWRITER ────────────────────────────────────────
+  const typedEl   = document.getElementById('typed');
+  const cursorEl  = document.getElementById('cursor');
+  const taglineEl = document.getElementById('tagline');
+  const dividerEl = document.getElementById('divider');
+  const taglines  = ["Powering Trust Through Technology","Seeing on Your Behalf","Securing What Matters Most","Intelligent Solutions. Real Results.","Your Eyes in the Digital World","Built for Reliability. Designed for Growth.","Innovation You Can Depend On"];
+  const sleep     = ms => new Promise(r => setTimeout(r, ms));
+
+  async function typeText(text, delay = 900) {
+    await sleep(delay);
+    for(const ch of text.split('')) {
+      if(ch === '\n'){ typedEl.appendChild(document.createElement('br')); await sleep(200); }
+      else { typedEl.insertAdjacentText('beforeend', ch); await sleep(ch==='.'?380:ch===','?220:55+Math.random()*45); }
+    }
+    await sleep(500);
+    cursorEl.style.animation = 'none'; cursorEl.style.opacity = '0';
+  }
+
+  async function rotateTags() {
+    dividerEl.classList.add('open'); await sleep(400);
+    let i = 0;
+    while(true) {
+      taglineEl.textContent = taglines[i];
+      taglineEl.classList.remove('exit'); taglineEl.classList.add('visible');
+      await sleep(2800);
+      taglineEl.classList.remove('visible'); taglineEl.classList.add('exit');
+      await sleep(550); taglineEl.classList.remove('exit');
+      i = (i + 1) % taglines.length; await sleep(100);
+    }
+  }
+
+  (async () => { await typeText("Stratovex\nPty Ltd."); await sleep(300); rotateTags(); })();
+</script>
+</body>
+</html>
