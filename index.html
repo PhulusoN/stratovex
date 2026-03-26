@@ -67,46 +67,8 @@
 
     @media(max-width:768px){ nav { padding:0 1.5rem; } .nav__links, .nav__cta { display:none; } .nav__hamburger { display:flex; } }
 
-    /* ── HERO ── */
-    .hero { position:relative; width:100%; height:100vh; display:flex; align-items:center; justify-content:center; overflow:hidden; }
-    .hero__bg { position:absolute; inset:0; z-index:0; }
-
-    /* SLIDE — faster fade: 0.9s, loops every 3s */
-    .hero__slide {
-      position:absolute; inset:0;
-      background-size:cover; background-position:center 40%;
-      filter:brightness(0.35) saturate(0.65);
-      opacity:0;
-      transition:opacity 0.9s ease;
-    }
-    .hero__slide.active { opacity:1; }
-
-    .hero__vignette { position:absolute; inset:0; z-index:1; background:radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.78) 100%); pointer-events:none; }
-    .hero__content { position:relative; z-index:2; text-align:center; padding:0 2rem; max-width:960px; }
-    .hero__headline { font-family:'Anton',sans-serif; font-size:clamp(3.5rem,10vw,9rem); line-height:0.95; color:var(--red); letter-spacing:0.03em; text-transform:uppercase; min-height:1em; }
-    .cursor { display:inline-block; width:4px; height:0.8em; background:var(--red); margin-left:5px; vertical-align:middle; animation:blink 0.9s step-end infinite; }
-    @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
-    .tagline-wrap { margin-top:2rem; height:2.2rem; display:flex; align-items:center; justify-content:center; overflow:hidden; }
-    .tagline { font-family:'Jost',sans-serif; font-weight:200; font-size:clamp(0.75rem,2vw,1rem); letter-spacing:0.28em; text-transform:uppercase; color:rgba(240,235,227,0.7); opacity:0; transform:translateY(14px); transition:opacity 0.5s ease, transform 0.5s ease; white-space:nowrap; }
-    .tagline.visible { opacity:1; transform:translateY(0); }
-    .tagline.exit    { opacity:0; transform:translateY(-14px); }
-    .hero__divider { width:0; height:1px; background:var(--red); margin:1.4rem auto 0; transition:width 1s ease; }
-    .hero__divider.open { width:120px; }
-
-    /* Slide dots */
-    .hero__dots { position:absolute; bottom:5.5rem; left:50%; transform:translateX(-50%); display:flex; gap:8px; z-index:3; }
-    .hero__dot { width:6px; height:6px; border-radius:50%; background:rgba(240,235,227,0.3); border:1px solid rgba(240,235,227,0.4); cursor:pointer; transition:background 0.3s, transform 0.3s; }
-    .hero__dot.active { background:var(--red); border-color:var(--red); transform:scale(1.3); }
-
-    /* Scroll arrow */
-    .scroll-arrow { position:absolute; bottom:2.2rem; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:6px; opacity:0; animation:fadeUp 0.8s 4s ease forwards; cursor:pointer; text-decoration:none; z-index:3; }
-    .scroll-arrow span { font-size:0.6rem; letter-spacing:0.25em; text-transform:uppercase; color:rgba(240,235,227,0.35); font-family:'Jost',sans-serif; }
-    .scroll-arrow svg { animation:bounce 2s 4.5s ease-in-out infinite; }
-    @keyframes bounce { 0%,100%{transform:translateY(0);} 50%{transform:translateY(6px);} }
-    @keyframes fadeUp { to { opacity:1; transform:translateX(-50%) translateY(0); } }
-
     /* ── SERVICES ── */
-    #services { padding:7rem 6vw; background:var(--dark); border-top:1px solid rgba(192,57,43,0.15); }
+    #services { padding:7rem 6vw; padding-top: calc(7rem + 72px); background:var(--dark); border-top:1px solid rgba(192,57,43,0.15); }
     .services__header { display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:4rem; flex-wrap:wrap; gap:1.5rem; }
     .services__eyebrow { font-size:0.68rem; letter-spacing:0.4em; text-transform:uppercase; color:var(--red); margin-bottom:0.9rem; display:block; font-family:'Jost',sans-serif; }
     .services__heading { font-family:'Anton',sans-serif; font-size:clamp(2.2rem,5vw,4.5rem); text-transform:uppercase; line-height:0.92; letter-spacing:0.02em; color:var(--light); }
@@ -139,7 +101,7 @@
     @media(max-width:400px){ .stats-bar { grid-template-columns:1fr; } }
 
     /* ── WHY US ── */
-#whyus { padding:7rem 6vw; background:#1c1c1c; border-top:1px solid rgba(192,57,43,0.15); position:relative; overflow:hidden; }
+    #whyus { padding:7rem 6vw; background:#1c1c1c; border-top:1px solid rgba(192,57,43,0.15); position:relative; overflow:hidden; }
     .whyus__ghost { position:absolute; top:-0.1em; right:4vw; font-family:'Anton',sans-serif; font-size:clamp(10rem,22vw,18rem); color:rgba(43, 177, 192, 0.04); line-height:1; pointer-events:none; user-select:none; letter-spacing:-0.02em; }
     .whyus__inner { display:grid; grid-template-columns:1fr 1fr; gap:5rem; align-items:start; position:relative; z-index:1; }
     .whyus__eyebrow { font-size:0.68rem; letter-spacing:0.4em; text-transform:uppercase; color:var(--red); margin-bottom:1rem; display:block; font-family:'Jost',sans-serif; }
@@ -311,31 +273,6 @@
   <a href="#quote" onclick="closeDrawer()">Contact</a>
   <a href="#quote" class="drawer__cta" onclick="closeDrawer()">Get a Quote</a>
 </div>
-
-<!-- HERO -->
-<section class="hero" id="home">
-  <div class="hero__bg">
-    <!-- ✏️ Replace filenames with your own images -->
-    <div class="hero__slide active" style="background-image:url('cctv.jpg')"></div>
-    <div class="hero__slide"        style="background-image:url('hero2.jpg')"></div>
-    <div class="hero__slide"        style="background-image:url('hero3.jpg')"></div>
-    <div class="hero__slide"        style="background-image:url('hero4.jpg')"></div>
-    <div class="hero__slide"        style="background-image:url('hero5.jpg')"></div>
-  </div>
-  <div class="hero__vignette"></div>
-  <div class="hero__content">
-    <h1 class="hero__headline"><span id="typed"></span><span class="cursor" id="cursor"></span></h1>
-    <div class="hero__divider" id="divider"></div>
-    <div class="tagline-wrap"><p class="tagline" id="tagline"></p></div>
-  </div>
-  <div class="hero__dots" id="heroDots"></div>
-  <a class="scroll-arrow" href="#services">
-    <span>Our Services</span>
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-      <path d="M10 4v12M4 10l6 6 6-6" stroke="#c0392b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </a>
-</section>
 
 <!-- SERVICES -->
 <section id="services">
@@ -623,37 +560,6 @@
   function scrollToTop(e) { if(e) e.preventDefault(); closeDrawer(); window.scrollTo({ top:0, behavior:'smooth' }); }
   window.addEventListener('resize', () => { if(window.innerWidth > 768) closeDrawer(); });
 
-  // ── SLIDESHOW — loops every 3s, fade 0.9s ─────────────
-  (function() {
-    const slides   = Array.from(document.querySelectorAll('.hero__slide'));
-    const dotsWrap = document.getElementById('heroDots');
-    let current    = 0;
-    let timer;
-
-    slides.forEach((_, i) => {
-      const btn = document.createElement('button');
-      btn.className = 'hero__dot' + (i === 0 ? ' active' : '');
-      btn.setAttribute('aria-label', 'Slide ' + (i + 1));
-      btn.addEventListener('click', () => goTo(i));
-      dotsWrap.appendChild(btn);
-    });
-
-    function goTo(n) {
-      slides[current].classList.remove('active');
-      dotsWrap.children[current].classList.remove('active');
-      current = (n + slides.length) % slides.length;  // wraps back to 0 after last = loop
-      slides[current].classList.add('active');
-      dotsWrap.children[current].classList.add('active');
-    }
-
-    function startTimer() { timer = setInterval(() => goTo(current + 1), 3000); }  // 3s interval
-    function stopTimer()  { clearInterval(timer); }
-
-    startTimer();
-    document.getElementById('home').addEventListener('mouseenter', stopTimer);
-    document.getElementById('home').addEventListener('mouseleave', startTimer);
-  })();
-
   // ── MODAL ─────────────────────────────────────────────
   const services = {
     cctv:       { title:'CCTV Installation',       icon:'<path d="M15 10l4.553-2.069A1 1 0 0121 8.87V15.13a1 1 0 01-1.447.9L15 14M3 8h12v8H3z"/><circle cx="7" cy="12" r="1"/>',                                                                                                                                               body:'High-definition surveillance systems professionally installed for your site. We handle strategic camera placement for maximum coverage, ensuring every angle is secured and monitored.',    features:['High-definition surveillance systems','Strategic camera placement for maximum coverage','Remote monitoring and mobile integration'] },
@@ -713,39 +619,6 @@
     entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.1 });
   document.querySelectorAll('.reveal, .reveal-stagger').forEach(el => observer.observe(el));
-
-  // ── TYPEWRITER ────────────────────────────────────────
-  const typedEl   = document.getElementById('typed');
-  const cursorEl  = document.getElementById('cursor');
-  const taglineEl = document.getElementById('tagline');
-  const dividerEl = document.getElementById('divider');
-  const taglines  = ["Powering Trust Through Technology","Seeing on Your Behalf","Securing What Matters Most","Intelligent Solutions. Real Results.","Your Eyes in the Digital World","Built for Reliability. Designed for Growth.","Innovation You Can Depend On"];
-  const sleep     = ms => new Promise(r => setTimeout(r, ms));
-
-  async function typeText(text, delay = 900) {
-    await sleep(delay);
-    for(const ch of text.split('')) {
-      if(ch === '\n'){ typedEl.appendChild(document.createElement('br')); await sleep(200); }
-      else { typedEl.insertAdjacentText('beforeend', ch); await sleep(ch==='.'?380:ch===','?220:55+Math.random()*45); }
-    }
-    await sleep(500);
-    cursorEl.style.animation = 'none'; cursorEl.style.opacity = '0';
-  }
-
-  async function rotateTags() {
-    dividerEl.classList.add('open'); await sleep(400);
-    let i = 0;
-    while(true) {
-      taglineEl.textContent = taglines[i];
-      taglineEl.classList.remove('exit'); taglineEl.classList.add('visible');
-      await sleep(2800);
-      taglineEl.classList.remove('visible'); taglineEl.classList.add('exit');
-      await sleep(550); taglineEl.classList.remove('exit');
-      i = (i + 1) % taglines.length; await sleep(100);
-    }
-  }
-
-  (async () => { await typeText("Stratovex\nPty Ltd."); await sleep(300); rotateTags(); })();
 </script>
 </body>
 </html>
