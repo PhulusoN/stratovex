@@ -517,6 +517,18 @@
 
 
 <script>
+  
+     // ============================================================
+        // ── EMAILJS CONFIG — REPLACE THESE 3 VALUES ──
+        // ============================================================
+        const EMAILJS_PUBLIC_KEY  = 'vW5KAwU_tHhhlu5Ln';      // e.g. 'abc123XYZ'
+        const EMAILJS_SERVICE_ID  = 'service_xnevc5s';      // e.g. 'service_xxxxxx'
+        const EMAILJS_TEMPLATE_ID = 'vW5KAwU_tHhhlu5Ln';     // e.g. 'template_xxxxxx'
+        // ============================================================w
+
+        // Initialise EmailJS
+        emailjs.init(EMAILJS_PUBLIC_KEY);
+  
   // ── HAMBURGER ─────────────────────────────────────────
   const hamburger = document.getElementById('hamburger');
   const drawer    = document.getElementById('drawer');
