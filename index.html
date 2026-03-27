@@ -6,9 +6,7 @@
   <title>Stratovex</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Jost:wght@200;400&display=swap" rel="stylesheet">
-  <link rel="icon" href="logo2.jpg" type="image/x-icon">
-  <!-- EmailJS -->
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <link rel="icon" href="logo2.jpg" type="image/x-icon">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -128,51 +126,19 @@
     .reviews__eyebrow { font-size:0.68rem; letter-spacing:0.4em; text-transform:uppercase; color:var(--red); margin-bottom:1rem; display:block; font-family:'Jost',sans-serif; }
     .reviews__heading { font-family:'Anton',sans-serif; font-size:clamp(2.2rem,5vw,4rem); text-transform:uppercase; line-height:0.92; color:var(--light); }
     .reviews__heading span { color:var(--red); }
-
-    /* ── REVIEWS GRID FIX: 2 cols top row, 3 cols bottom row using subgrid-like approach ── */
-    .reviews__grid {
-      display: grid;
-      /* 5 cards: row 1 = 2 cards centred, row 2 = 3 cards */
-      grid-template-columns: repeat(6, 1fr);
-      gap: 1px;
-      background: rgba(192,57,43,0.12);
-      border: 1px solid rgba(192,57,43,0.12);
-    }
-    .review-card {
-      background:#0f0e0c;
-      padding:2.4rem 2rem;
-      position:relative;
-      transition:background 0.3s;
-    }
-    /* Cards 1 & 2: span 3 cols each → fills 6 cols, centred row */
-    .review-card:nth-child(1),
-    .review-card:nth-child(2) { grid-column: span 3; }
-    /* Cards 3, 4 & 5: span 2 cols each → fills 6 cols */
-    .review-card:nth-child(3),
-    .review-card:nth-child(4),
-    .review-card:nth-child(5) { grid-column: span 2; }
-
+    .reviews__grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:1px; background:rgba(192,57,43,0.12); border:1px solid rgba(192,57,43,0.12); }
+    .review-card { background:#0f0e0c; padding:2.4rem 2rem; position:relative; transition:background 0.3s; }
     .review-card:hover { background:#161412; }
     .review-card::before { content:''; position:absolute; top:0; left:0; width:3px; height:0; background:var(--red); transition:height 0.4s ease; }
     .review-card:hover::before { height:100%; }
-    .review-card__stars { display:flex; gap:4px; margin-bottom:1.2rem; }
-    .review-card__stars svg { width:15px; height:15px; fill:#c0392b; flex-shrink:0; }
+    .review-card__stars { display:flex; gap:3px; margin-bottom:1.2rem; }
+    .review-card__stars svg { width:14px; height:14px; fill:var(--red); }
     .review-card__quote { font-size:2.5rem; line-height:1; color:rgba(192,57,43,0.25); font-family:'Anton',sans-serif; margin-bottom:0.6rem; }
     .review-card__text { font-size:0.9rem; line-height:1.8; color:rgba(240,235,227,0.6); font-family:'Jost',sans-serif; font-weight:200; margin-bottom:1.6rem; font-style:italic; }
     .review-card__author { display:flex; align-items:center; gap:0.9rem; }
     .review-card__avatar { width:38px; height:38px; border-radius:50%; background:var(--red); display:flex; align-items:center; justify-content:center; font-family:'Anton',sans-serif; font-size:0.75rem; color:#fff; flex-shrink:0; }
     .review-card__name { font-family:'Jost',sans-serif; font-weight:400; font-size:0.88rem; color:var(--light); }
     .review-card__role { font-family:'Jost',sans-serif; font-weight:200; font-size:0.75rem; color:rgba(240,235,227,0.4); margin-top:2px; }
-
-    /* Mobile: stack all cards full width */
-    @media(max-width:768px){
-      .reviews__grid { grid-template-columns: 1fr; }
-      .review-card:nth-child(n) { grid-column: span 1; }
-    }
-    @media(min-width:769px) and (max-width:1024px){
-      .reviews__grid { grid-template-columns: repeat(2, 1fr); }
-      .review-card:nth-child(n) { grid-column: span 1; }
-    }
 
     /* ── GLASS MODAL ── */
     .modal-overlay { position:fixed; inset:0; z-index:500; background:rgba(0,0,0,0.6); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); display:flex; align-items:center; justify-content:center; padding:2rem; opacity:0; pointer-events:none; transition:opacity 0.3s ease; }
@@ -208,7 +174,6 @@
     .quote__field textarea { resize:vertical; min-height:120px; }
     .quote__submit { grid-column:1/-1; margin-top:0.5rem; padding:0.9rem 3rem; background:var(--red); border:1px solid var(--red); color:#fff; font-family:'Jost',sans-serif; font-weight:400; font-size:0.8rem; letter-spacing:0.22em; text-transform:uppercase; cursor:pointer; transition:background 0.25s, color 0.25s; width:100%; }
     .quote__submit:hover { background:transparent; color:var(--red); }
-    .quote__submit:disabled { opacity:0.6; cursor:not-allowed; }
 
     /* ── FOOTER ── */
     footer { background:#060504; border-top:1px solid rgba(192,57,43,0.2); padding:5rem 6vw 2.5rem; }
@@ -252,8 +217,6 @@
     .reveal-stagger.visible > *:nth-child(1){ opacity:1;transform:translateY(0);transition-delay:0s; }
     .reveal-stagger.visible > *:nth-child(2){ opacity:1;transform:translateY(0);transition-delay:0.08s; }
     .reveal-stagger.visible > *:nth-child(3){ opacity:1;transform:translateY(0);transition-delay:0.16s; }
-    .reveal-stagger.visible > *:nth-child(4){ opacity:1;transform:translateY(0);transition-delay:0.24s; }
-    .reveal-stagger.visible > *:nth-child(5){ opacity:1;transform:translateY(0);transition-delay:0.32s; }
 
     @media(max-width:600px){ .services__header { flex-direction:column; align-items:flex-start; } .modal { padding:2rem 1.6rem; } .quote__form { grid-template-columns:1fr; } .quote__form .full { grid-column:1; } }
 
@@ -314,6 +277,7 @@
 
   <div class="services__grid reveal-stagger">
 
+
     <!-- IT NETWORKING -->
     <div class="service-card" onclick="openModal('networking')">
       <div class="service-card__bg" style="background-image:url('network.jpg')"></div>
@@ -333,7 +297,7 @@
       <span class="service-card__more">Learn more →</span>
     </div>
 
-    <!-- WEB DEVELOPMENT -->
+     <!-- WEB DEVELOPMENT -->
     <div class="service-card" onclick="openModal('webdev')">
       <div class="service-card__bg" style="background-image:url('web.jpg')"></div>
       <svg class="service-card__icon icon-webdev" viewBox="0 0 44 44" fill="none">
@@ -359,6 +323,8 @@
       <p class="service-card__blurb">Complete security packages covering CCTV, access control, and intercom systems — everything your site needs, installed as one seamless solution.</p>
       <span class="service-card__more">Learn more →</span>
     </div>
+
+
 
   </div>
 
@@ -422,81 +388,32 @@
     <span class="reviews__eyebrow">Client Feedback</span>
     <h2 class="reviews__heading">What Our <span>Clients Say</span></h2>
   </div>
-
-  <!-- ── 5 REVIEW CARDS ── -->
   <div class="reviews__grid reveal-stagger">
-
-    <!-- CARD 1 (row 1, spans 3 cols) -->
     <div class="review-card">
-      <div class="review-card__stars">
-        <svg viewBox="0 0 24 24"><path fill="#c0392b" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <svg viewBox="0 0 24 24"><path fill="#c0392b" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <svg viewBox="0 0 24 24"><path fill="#c0392b" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <svg viewBox="0 0 24 24"><path fill="#c0392b" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <svg viewBox="0 0 24 24"><path fill="#c0392b" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-      </div>
+      <div class="review-card__stars"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
       <div class="review-card__quote">"</div>
       <p class="review-card__text">Stratovex installed a full CCTV system across our warehouse. The team was professional, fast, and the cameras are crystal clear. Couldn't be happier.</p>
       <div class="review-card__author"><div class="review-card__avatar">TM</div><div><p class="review-card__name">Thabo Mokoena</p><p class="review-card__role">Operations Manager · Manufacturing</p></div></div>
     </div>
-
-    <!-- CARD 2 (row 1, spans 3 cols) -->
     <div class="review-card">
-      <div class="review-card__stars">
-        <svg viewBox="0 0 24 24"><path fill="#c0392b" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <svg viewBox="0 0 24 24"><path fill="#c0392b" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <svg viewBox="0 0 24 24"><path fill="#c0392b" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <svg viewBox="0 0 24 24"><path fill="#c0392b" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <svg viewBox="0 0 24 24"><path fill="#c0392b" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-      </div>
+      <div class="review-card__stars"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
       <div class="review-card__quote">"</div>
       <p class="review-card__text">Our office network was a mess. Stratovex redesigned the whole setup and everything runs flawlessly now. Their support after installation has been excellent.</p>
       <div class="review-card__author"><div class="review-card__avatar">SN</div><div><p class="review-card__name">Sarah Nkosi</p><p class="review-card__role">IT Director · Financial Services</p></div></div>
     </div>
-
-    <!-- CARD 3 (row 2, spans 2 cols) -->
     <div class="review-card">
-      <div class="review-card__stars">
-        <svg viewBox="0 0 24 24"><path fill="#c0392b" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <svg viewBox="0 0 24 24"><path fill="#c0392b" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <svg viewBox="0 0 24 24"><path fill="#c0392b" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <svg viewBox="0 0 24 24"><path fill="#c0392b" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <svg viewBox="0 0 24 24"><path fill="#c0392b" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-      </div>
+      <div class="review-card__stars"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
       <div class="review-card__quote">"</div>
       <p class="review-card__text">They built our website and handled our access control at the same time. One team, zero stress. Very professional from start to finish.</p>
       <div class="review-card__author"><div class="review-card__avatar">LB</div><div><p class="review-card__name">Lebo Baloyi</p><p class="review-card__role">Owner · Retail Business</p></div></div>
     </div>
-
-    <!-- CARD 4 (row 2, spans 2 cols) -->
     <div class="review-card">
-      <div class="review-card__stars">
-        <svg viewBox="0 0 24 24"><path fill="#c0392b" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <svg viewBox="0 0 24 24"><path fill="#c0392b" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <svg viewBox="0 0 24 24"><path fill="#c0392b" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <svg viewBox="0 0 24 24"><path fill="#c0392b" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <svg viewBox="0 0 24 24"><path fill="#c0392b" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-      </div>
+      <div class="review-card__stars"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
       <div class="review-card__quote">"</div>
       <p class="review-card__text">Intercoms, access control, and networking done in one visit. Stratovex was efficient, clean, and explained everything clearly. Will definitely use them again.</p>
       <div class="review-card__author"><div class="review-card__avatar">KD</div><div><p class="review-card__name">Kagiso Dlamini</p><p class="review-card__role">Facilities Manager · Commercial Property</p></div></div>
     </div>
-
-    <!-- CARD 5 (row 2, spans 2 cols) — NEW -->
-    <div class="review-card">
-      <div class="review-card__stars">
-        <svg viewBox="0 0 24 24"><path fill="#c0392b" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <svg viewBox="0 0 24 24"><path fill="#c0392b" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <svg viewBox="0 0 24 24"><path fill="#c0392b" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <svg viewBox="0 0 24 24"><path fill="#c0392b" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        <svg viewBox="0 0 24 24"><path fill="#c0392b" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-      </div>
-      <div class="review-card__quote">"</div>
-      <p class="review-card__text">Stratovex set up our entire estate's access control and intercom within a day. Fast, tidy, and everything works perfectly. Highly recommend for any residential complex.</p>
-      <div class="review-card__author"><div class="review-card__avatar">NP</div><div><p class="review-card__name">Nomsa Petersen</p><p class="review-card__role">Body Corporate Trustee · Residential Estate</p></div></div>
-    </div>
-
-  </div><!-- end reviews__grid -->
+  </div>
 </section>
 
 <!-- QUOTE -->
@@ -505,10 +422,10 @@
     <span class="quote__eyebrow">Get in Touch</span>
     <h2 class="quote__heading">Request a<br><span>Quote</span></h2>
     <p class="quote__sub">Tell us about your project and we'll get back to you within 24 hours with a tailored solution.</p>
-    <form class="quote__form" id="quoteForm" onsubmit="handleSubmit(event)">
-      <div class="quote__field"><label>Full Name</label><input type="text" id="from_name" placeholder="John Smith" required/></div>
-      <div class="quote__field"><label>Email Address</label><input type="email" id="from_email" placeholder="john@example.com" required/></div>
-      <div class="quote__field"><label>Phone Number</label><input type="tel" id="phone" placeholder="+27 000 000 0000"/></div>
+    <form class="quote__form" onsubmit="handleSubmit(event)">
+      <div class="quote__field"><label>Full Name</label><input type="text" placeholder="John Smith" required/></div>
+      <div class="quote__field"><label>Email Address</label><input type="email" placeholder="john@example.com" required/></div>
+      <div class="quote__field"><label>Phone Number</label><input type="tel" placeholder="+27 000 000 0000"/></div>
       <div class="quote__field">
         <label>Service Needed</label>
         <select id="quoteService">
@@ -519,8 +436,8 @@
           <option>Multiple / Other</option>
         </select>
       </div>
-      <div class="quote__field full"><label>Tell us about your project</label><textarea id="message" placeholder="Describe your site, requirements, or any questions…"></textarea></div>
-      <button type="submit" class="quote__submit" id="submitBtn">Send Request →</button>
+      <div class="quote__field full"><label>Tell us about your project</label><textarea placeholder="Describe your site, requirements, or any questions…"></textarea></div>
+      <button type="submit" class="quote__submit">Send Request →</button>
     </form>
   </div>
 </section>
@@ -538,7 +455,7 @@
         <a href="#" class="footer__social" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
         <a href="#" class="footer__social" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/></svg></a>
         <a href="#" class="footer__social" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg></a>
-        <a href="https://wa.me/+27722443902" target="_blank" rel="noopener" class="footer__social" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+        <a href="https://wa.me/YOUR_NUMBER" target="_blank" rel="noopener" class="footer__social" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
       </div>
     </div>
     <div>
@@ -577,7 +494,7 @@
     </div>
   </div>
   <div class="footer__bottom">
-    <p class="footer__copy">© 2026 <span>Stratovex Pty Ltd</span>. All rights reserved.</p>
+    <p class="footer__copy">© 2025 <span>Stratovex Pty Ltd</span>. All rights reserved.</p>
     <p class="footer__tagline">Powering Trust Through Technology</p>
   </div>
 </footer>
@@ -600,16 +517,53 @@
   <svg viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
 </a>
 
+
 <script>
+      const EMAILJS_PUBLIC_KEY  = 'service_xnevc5s';      // e.g. 'abc123XYZ'
+        const EMAILJS_SERVICE_ID  = 'service_xnevc5s';      // e.g. 'service_xxxxxx'
+        const EMAILJS_TEMPLATE_ID = 'template_8vd1xbl';     // e.g. 'template_xxxxxx'
+        // ============================================================w
+        // Initialise EmailJS
+        emailjs.init(EMAILJS_PUBLIC_KEY);
+        
+        document.getElementById('contactForm').addEventListener('input', () => {
+            document.getElementById('whatsappFormBtn').href = buildWhatsAppLink();
+        });
+        document.getElementById('whatsappFormBtn').href = buildWhatsAppLink();
 
+        // ── CONTACT FORM — EmailJS submit ──
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
 
-  const EMAILJS_PUBLIC_KEY  = 'vW5KAwU_tHhhlu5Ln'; 
-  const EMAILJS_SERVICE_ID  = 'service_xnevc5s';    
-  const EMAILJS_TEMPLATE_ID = 'template_8vd1xbl';   
+            const btn    = document.getElementById('submitBtn');
+            const status = document.getElementById('formStatus');
 
-  emailjs.init(EMAILJS_PUBLIC_KEY);
+            // Disable button while sending
+            btn.disabled = true;
+            btn.textContent = 'Sending...';
+            status.className = 'form-status';
+            status.textContent = '';
 
-  // ── HAMBURGER ─────────────────────────────────────────────
+            emailjs.sendForm(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, this)
+                .then(() => {
+                    status.className = 'form-status success';
+                    status.textContent = '✅ Message sent! We will get back to you shortly.';
+                    this.reset();
+                    document.getElementById('whatsappFormBtn').href = buildWhatsAppLink();
+                    btn.disabled = false;
+                    btn.textContent = 'Send Message';
+                })
+                .catch((error) => {
+                    console.error('EmailJS error:', error);
+                    status.className = 'form-status error';
+                    status.textContent = '❌ Something went wrong. Please try WhatsApp or call us directly.';
+                    btn.disabled = false;
+                    btn.textContent = 'Send Message';
+                });
+        });
+
+  
+  // ── HAMBURGER ─────────────────────────────────────────
   const hamburger = document.getElementById('hamburger');
   const drawer    = document.getElementById('drawer');
   hamburger.addEventListener('click', () => {
@@ -621,7 +575,7 @@
   function scrollToTop(e) { if(e) e.preventDefault(); closeDrawer(); window.scrollTo({ top:0, behavior:'smooth' }); }
   window.addEventListener('resize', () => { if(window.innerWidth > 768) closeDrawer(); });
 
-  // ── MODAL DATA ────────────────────────────────────────────
+  // ── MODAL DATA ────────────────────────────────────────
   const services = {
     security: {
       title: 'Security Essentials',
@@ -674,56 +628,16 @@
   function closeModalDirect() { document.getElementById('modalOverlay').classList.remove('open'); document.body.style.overflow = ''; }
   document.addEventListener('keydown', e => { if(e.key === 'Escape') closeModalDirect(); });
 
-  // ── QUOTE FORM ────────────────────────────────────────────
+  // ── QUOTE FORM ────────────────────────────────────────
   function handleSubmit(e) {
     e.preventDefault();
-    const btn = document.getElementById('submitBtn');
-
-    // Guard: remind developer if IDs haven't been filled in
-    if(EMAILJS_SERVICE_ID === 'service_xnevc5s' || EMAILJS_TEMPLATE_ID === 'template_8vd1xbl') {
-      alert('EmailJS is not configured yet.\nOpen index.html and replace EMAILJS_SERVICE_ID and EMAILJS_TEMPLATE_ID with your actual IDs from emailjs.com');
-      return;
-    }
-
-    btn.textContent = 'Sending…';
-    btn.disabled = true;
-
-    const templateParams = {
-      from_name:  document.getElementById('from_name').value,
-      from_email: document.getElementById('from_email').value,
-      phone:      document.getElementById('phone').value,
-      service:    document.getElementById('quoteService').value || 'Not specified',
-      message:    document.getElementById('message').value
-    };
-
-    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
-      .then(() => {
-        btn.textContent = '✓ Request Sent!';
-        btn.style.background  = '#27ae60';
-        btn.style.borderColor = '#27ae60';
-        e.target.reset();
-        setTimeout(() => {
-          btn.textContent = 'Send Request →';
-          btn.style.background  = '';
-          btn.style.borderColor = '';
-          btn.disabled = false;
-        }, 3500);
-      })
-      .catch((err) => {
-        console.error('EmailJS error:', err);
-        btn.textContent = '✕ Failed — Try Again';
-        btn.style.background  = '#7f1d1d';
-        btn.style.borderColor = '#7f1d1d';
-        btn.disabled = false;
-        setTimeout(() => {
-          btn.textContent = 'Send Request →';
-          btn.style.background  = '';
-          btn.style.borderColor = '';
-        }, 3500);
-      });
+    const btn = e.target.querySelector('.quote__submit');
+    btn.textContent = '✓ Request Sent!';
+    btn.style.background = '#27ae60'; btn.style.borderColor = '#27ae60';
+    setTimeout(() => { btn.textContent = 'Send Request →'; btn.style.background = ''; btn.style.borderColor = ''; e.target.reset(); }, 3000);
   }
 
-  // ── STATS COUNT-UP ────────────────────────────────────────
+  // ── STATS COUNT-UP ────────────────────────────────────
   const statObserver = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if(!entry.isIntersecting) return;
@@ -744,12 +658,11 @@
   const statsBar = document.querySelector('.stats-bar');
   if(statsBar) statObserver.observe(statsBar);
 
-  // ── SCROLL REVEAL ─────────────────────────────────────────
+  // ── SCROLL REVEAL ─────────────────────────────────────
   const observer = new IntersectionObserver(entries => {
     entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.1 });
   document.querySelectorAll('.reveal, .reveal-stagger').forEach(el => observer.observe(el));
-
 </script>
 </body>
 </html>
