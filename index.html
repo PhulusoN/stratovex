@@ -6,6 +6,7 @@
   <title>Stratovex</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Jost:wght@200;400&display=swap" rel="stylesheet">
+    <link rel="icon" href="logo2.jpg" type="image/x-icon">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -93,8 +94,8 @@
     .stats-bar { display:grid; grid-template-columns:1fr auto 1fr auto 1fr auto 1fr; align-items:center; margin-top:1px; background:rgba(192,57,43,0.08); border:1px solid rgba(192,57,43,0.15); border-top:none; padding:2.8rem 4rem; }
     .stats-bar__item { display:flex; flex-direction:column; align-items:center; gap:0.5rem; text-align:center; }
     .stats-bar__number-wrap { display:flex; align-items:baseline; gap:2px; }
-    .stats-bar__number { font-family:'Anton',sans-serif; font-size:clamp(2.4rem,4vw,3.8rem); line-height:1; color:var(--red); letter-spacing:-0.02em; }
-    .stats-bar__suffix { font-family:'Anton',sans-serif; font-size:clamp(1.4rem,2.5vw,2rem); color:var(--red); line-height:1; }
+    .stats-bar__number { font-family:'Anton',sans-serif; font-size:clamp(2.4rem,4vw,3.8rem); line-height:1; color:#ffffff; letter-spacing:-0.02em; }
+    .stats-bar__suffix { font-family:'Anton',sans-serif; font-size:clamp(1.4rem,2.5vw,2rem); color:#ffffff; line-height:1; }
     .stats-bar__label { font-family:'Jost',sans-serif; font-weight:200; font-size:0.78rem; letter-spacing:0.18em; text-transform:uppercase; color:rgba(240,235,227,0.5); }
     .stats-bar__divider { width:1px; height:48px; background:rgba(192,57,43,0.2); margin:0 2rem; }
     @media(max-width:768px){ .stats-bar { grid-template-columns:1fr 1fr; grid-template-rows:auto auto; gap:2.2rem 0; padding:2.4rem 2rem; } .stats-bar__divider { display:none; } }
@@ -102,7 +103,7 @@
 
     /* ── WHY US ── */
     #whyus { padding:7rem 6vw; background:#1c1c1c; border-top:1px solid rgba(192,57,43,0.15); position:relative; overflow:hidden; }
-    .whyus__ghost { position:absolute; top:-0.1em; right:4vw; font-family:'Anton',sans-serif; font-size:clamp(10rem,22vw,18rem); color:rgba(43, 177, 192, 0.04); line-height:1; pointer-events:none; user-select:none; letter-spacing:-0.02em; }
+    .whyus__ghost { position:absolute; top:-0.1em; right:4vw; font-family:'Anton',sans-serif; font-size:clamp(10rem,22vw,18rem); color:rgba(43,177,192,0.04); line-height:1; pointer-events:none; user-select:none; letter-spacing:-0.02em; }
     .whyus__inner { display:grid; grid-template-columns:1fr 1fr; gap:5rem; align-items:start; position:relative; z-index:1; }
     .whyus__eyebrow { font-size:0.68rem; letter-spacing:0.4em; text-transform:uppercase; color:var(--red); margin-bottom:1rem; display:block; font-family:'Jost',sans-serif; }
     .whyus__heading { font-family:'Anton',sans-serif; font-size:clamp(2.8rem,6vw,5.5rem); text-transform:uppercase; line-height:0.92; letter-spacing:0.02em; color:var(--light); margin-bottom:1.8rem; }
@@ -110,8 +111,8 @@
     .whyus__tagline { font-size:0.95rem; line-height:1.8; color:rgba(240,235,227,0.45); font-family:'Jost',sans-serif; font-weight:200; max-width:360px; }
     .whyus__items { display:flex; flex-direction:column; }
     .whyus__item { display:flex; align-items:flex-start; gap:1.4rem; padding:1.8rem 0; border-bottom:1px solid rgba(192,57,43,0.12); transition:background 0.3s; }
-    .whyus__item:first-child { border-top:1px solid rgb(255, 255, 255); }
-    .whyus__item-icon { width:44px; height:44px; border:1px solid rgb(255, 25, 0); display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background 0.3s, border-color 0.3s; }
+    .whyus__item:first-child { border-top:1px solid rgb(255,255,255); }
+    .whyus__item-icon { width:44px; height:44px; border:1px solid rgb(255,25,0); display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background 0.3s, border-color 0.3s; }
     .whyus__item:hover .whyus__item-icon { background:var(--red); border-color:var(--red); }
     .whyus__item-icon svg { width:20px; height:20px; color:var(--red); transition:color 0.3s; }
     .whyus__item:hover .whyus__item-icon svg { color:#fff; }
@@ -191,7 +192,7 @@
     .footer__contact-item a { color:rgba(240,235,227,0.45); text-decoration:none; transition:color 0.2s; }
     .footer__contact-item a:hover { color:var(--red); }
     .footer__socials { display:flex; gap:0.8rem; margin-top:1.6rem; }
-    .footer__social { width:36px; height:36px; border:1px solid rgba(238, 24, 0, 0.25); display:flex; align-items:center; justify-content:center; text-decoration:none; color:rgba(240,235,227,0.45); transition:background 0.25s, border-color 0.25s, color 0.25s; }
+    .footer__social { width:36px; height:36px; border:1px solid rgba(238,24,0,0.25); display:flex; align-items:center; justify-content:center; text-decoration:none; color:rgba(240,235,227,0.45); transition:background 0.25s, border-color 0.25s, color 0.25s; }
     .footer__social:hover { background:var(--red); border-color:var(--red); color:#fff; }
     .footer__social svg { width:16px; height:16px; }
     .footer__bottom { display:flex; align-items:center; justify-content:space-between; padding-top:2rem; flex-wrap:wrap; gap:1rem; }
@@ -216,22 +217,12 @@
     .reveal-stagger.visible > *:nth-child(1){ opacity:1;transform:translateY(0);transition-delay:0s; }
     .reveal-stagger.visible > *:nth-child(2){ opacity:1;transform:translateY(0);transition-delay:0.08s; }
     .reveal-stagger.visible > *:nth-child(3){ opacity:1;transform:translateY(0);transition-delay:0.16s; }
-    .reveal-stagger.visible > *:nth-child(4){ opacity:1;transform:translateY(0);transition-delay:0.24s; }
-    .reveal-stagger.visible > *:nth-child(5){ opacity:1;transform:translateY(0);transition-delay:0.32s; }
 
     @media(max-width:600px){ .services__header { flex-direction:column; align-items:flex-start; } .modal { padding:2rem 1.6rem; } .quote__form { grid-template-columns:1fr; } .quote__form .full { grid-column:1; } }
 
     /* ── ICON ANIMATIONS ── */
-    @keyframes cctvPan { 0%{transform:rotate(-25deg);} 50%{transform:rotate(25deg);} 100%{transform:rotate(-25deg);} }
-    .icon-cctv .cctv-body { transform-box:fill-box; transform-origin:50% 100%; }
-    .service-card:hover .icon-cctv .cctv-body { animation:cctvPan 2s ease-in-out infinite; }
-    @keyframes pulseRing { 0%{r:4;opacity:0.9;} 100%{r:11;opacity:0;} }
-    @keyframes btnPress  { 0%,100%{r:4;} 40%{r:3.2;} }
-    .service-card:hover .intercom-pulse { animation:pulseRing 1.2s ease-out infinite; }
-    .service-card:hover .intercom-btn   { animation:btnPress  1.2s ease-in-out infinite; }
-    @keyframes shackleOpen { 0%,100%{transform:translateY(0);} 40%{transform:translateY(-6px);} 60%{transform:translateY(-6px);} }
-    .lock-shackle { transform-box:fill-box; transform-origin:50% 100%; }
-    .service-card:hover .lock-shackle { animation:shackleOpen 1.8s ease-in-out infinite; }
+    @keyframes shieldPulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.07);} }
+    .service-card:hover .shield-icon { animation:shieldPulse 1.6s ease-in-out infinite; transform-box:fill-box; transform-origin:center; }
     .net-pulse-1, .net-pulse-2 { opacity:0; }
     .service-card:hover .net-pulse-1 { opacity:1; }
     .service-card:hover .net-pulse-2 { opacity:0.7; }
@@ -283,47 +274,24 @@
     </div>
     <p class="services__sub">Tailored technology and security solutions for residential, commercial, and industrial clients.</p>
   </div>
+
   <div class="services__grid reveal-stagger">
-    <div class="service-card" onclick="openModal('cctv')">
+
+    <!-- SECURITY ESSENTIALS -->
+    <div class="service-card" onclick="openModal('security')">
       <div class="service-card__bg" style="background-image:url('cctv.jpg')"></div>
-      <svg class="service-card__icon icon-cctv" viewBox="0 0 44 44" fill="none">
-        <line x1="22" y1="36" x2="22" y2="28" stroke="#c0392b" stroke-width="1.8" stroke-linecap="round"/>
-        <g class="cctv-body" transform-origin="22 28">
-          <rect x="10" y="18" width="16" height="10" rx="2" fill="none" stroke="#c0392b" stroke-width="1.6"/>
-          <rect x="26" y="20" width="7" height="6" rx="1" fill="none" stroke="#c0392b" stroke-width="1.5"/>
-          <circle cx="29.5" cy="23" r="1.5" fill="#c0392b" opacity="0.6"/>
-          <circle cx="13" cy="23" r="1" fill="#c0392b" opacity="0.8"/>
+      <svg class="service-card__icon" viewBox="0 0 44 44" fill="none">
+        <g class="shield-icon">
+          <path d="M22 5L9 11v10c0 8.8 5.6 17 13 19 7.4-2 13-10.2 13-19V11L22 5z" stroke="#c0392b" stroke-width="1.7" stroke-linejoin="round"/>
+          <path d="M16 23l4 4 8-8" stroke="#c0392b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
         </g>
       </svg>
-      <h3 class="service-card__title">CCTV Installation</h3>
-      <p class="service-card__blurb">High-definition surveillance with strategic placement for maximum coverage and mobile integration.</p>
+      <h3 class="service-card__title">Security Essentials</h3>
+      <p class="service-card__blurb">Complete security packages covering CCTV, access control, and intercom systems — everything your site needs, installed as one seamless solution.</p>
       <span class="service-card__more">Learn more →</span>
     </div>
-    <div class="service-card" onclick="openModal('intercom')">
-      <div class="service-card__bg" style="background-image:url('intercom.jpg')"></div>
-      <svg class="service-card__icon icon-intercom" viewBox="0 0 44 44" fill="none">
-        <rect x="12" y="6" width="20" height="32" rx="3" stroke="#c0392b" stroke-width="1.6"/>
-        <line x1="17" y1="13" x2="27" y2="13" stroke="#c0392b" stroke-width="1.3" stroke-linecap="round"/>
-        <line x1="17" y1="17" x2="27" y2="17" stroke="#c0392b" stroke-width="1.3" stroke-linecap="round"/>
-        <circle class="intercom-btn" cx="22" cy="28" r="4" stroke="#c0392b" stroke-width="1.6"/>
-        <circle class="intercom-pulse" cx="22" cy="28" r="4" stroke="#c0392b" stroke-width="1.2" opacity="0"/>
-      </svg>
-      <h3 class="service-card__title">Intercom Systems</h3>
-      <p class="service-card__blurb">Audio and video intercom solutions with seamless communication between entry points and offices.</p>
-      <span class="service-card__more">Learn more →</span>
-    </div>
-    <div class="service-card" onclick="openModal('access')">
-      <div class="service-card__bg" style="background-image:url('access.jpg')"></div>
-      <svg class="service-card__icon icon-lock" viewBox="0 0 44 44" fill="none">
-        <rect x="10" y="20" width="24" height="17" rx="3" stroke="#c0392b" stroke-width="1.6"/>
-        <circle cx="22" cy="27" r="2.5" stroke="#c0392b" stroke-width="1.4"/>
-        <line x1="22" y1="29.5" x2="22" y2="33" stroke="#c0392b" stroke-width="1.4" stroke-linecap="round"/>
-        <path class="lock-shackle" d="M15 20V15a7 7 0 0114 0v5" stroke="#c0392b" stroke-width="1.8" stroke-linecap="round" fill="none"/>
-      </svg>
-      <h3 class="service-card__title">Access Control Solutions</h3>
-      <p class="service-card__blurb">Biometric, card, and keypad entry systems — scalable from small offices to large facilities with full audit trails.</p>
-      <span class="service-card__more">Learn more →</span>
-    </div>
+
+    <!-- IT NETWORKING -->
     <div class="service-card" onclick="openModal('networking')">
       <div class="service-card__bg" style="background-image:url('network.jpg')"></div>
       <svg class="service-card__icon icon-network" viewBox="0 0 44 44" fill="none">
@@ -341,6 +309,8 @@
       <p class="service-card__blurb">Structured cabling, network design & optimization, plus proactive monitoring to keep performance high.</p>
       <span class="service-card__more">Learn more →</span>
     </div>
+
+    <!-- WEB DEVELOPMENT -->
     <div class="service-card" onclick="openModal('webdev')">
       <div class="service-card__bg" style="background-image:url('web.jpg')"></div>
       <svg class="service-card__icon icon-webdev" viewBox="0 0 44 44" fill="none">
@@ -352,6 +322,7 @@
       <p class="service-card__blurb">Clean, fast, and effective websites and web apps built to represent your brand online.</p>
       <span class="service-card__more">Learn more →</span>
     </div>
+
   </div>
 
   <!-- STATS BAR -->
@@ -456,9 +427,7 @@
         <label>Service Needed</label>
         <select id="quoteService">
           <option value="">Select a service…</option>
-          <option>CCTV Installation</option>
-          <option>Intercom Systems</option>
-          <option>Access Control Solutions</option>
+          <option>Security Essentials</option>
           <option>IT Networking Services</option>
           <option>Web Development</option>
           <option>Multiple / Other</option>
@@ -500,9 +469,7 @@
     <div>
       <p class="footer__col-title">Services</p>
       <ul class="footer__links">
-        <li><a href="#services" onclick="openModal('cctv')">CCTV Installation</a></li>
-        <li><a href="#services" onclick="openModal('intercom')">Intercom Systems</a></li>
-        <li><a href="#services" onclick="openModal('access')">Access Control</a></li>
+        <li><a href="#services" onclick="openModal('security')">Security Essentials</a></li>
         <li><a href="#services" onclick="openModal('networking')">IT Networking</a></li>
         <li><a href="#services" onclick="openModal('webdev')">Web Development</a></li>
       </ul>
@@ -560,31 +527,60 @@
   function scrollToTop(e) { if(e) e.preventDefault(); closeDrawer(); window.scrollTo({ top:0, behavior:'smooth' }); }
   window.addEventListener('resize', () => { if(window.innerWidth > 768) closeDrawer(); });
 
-  // ── MODAL ─────────────────────────────────────────────
+  // ── MODAL DATA ────────────────────────────────────────
   const services = {
-    cctv:       { title:'CCTV Installation',       icon:'<path d="M15 10l4.553-2.069A1 1 0 0121 8.87V15.13a1 1 0 01-1.447.9L15 14M3 8h12v8H3z"/><circle cx="7" cy="12" r="1"/>',                                                                                                                                               body:'High-definition surveillance systems professionally installed for your site. We handle strategic camera placement for maximum coverage, ensuring every angle is secured and monitored.',    features:['High-definition surveillance systems','Strategic camera placement for maximum coverage','Remote monitoring and mobile integration'] },
-    intercom:   { title:'Intercom Systems',         icon:'<rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="17" r="1"/><line x1="9" y1="6" x2="15" y2="6"/><line x1="9" y1="9" x2="15" y2="9"/>',                                                                                                         body:'Audio and video intercom solutions that keep your premises connected. We ensure seamless communication between entry points and offices, fully integrated with your access control systems.', features:['Audio and video intercom solutions','Seamless communication between entry points and offices','Integration with access control systems'] },
-    access:     { title:'Access Control Solutions', icon:'<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/><circle cx="12" cy="16" r="1"/>',                                                                                                                                                 body:'Scalable access control from small offices to large facilities. We deploy biometric, card, and keypad entry systems backed by full audit trails and reporting for complete accountability.',  features:['Biometric, card, and keypad entry systems','Scalable solutions for small offices to large facilities','Enhanced security with audit trails and reporting'] },
-    networking: { title:'IT Networking Services',   icon:'<rect x="2" y="3" width="6" height="4" rx="1"/><rect x="16" y="3" width="6" height="4" rx="1"/><rect x="9" y="17" width="6" height="4" rx="1"/><line x1="5" y1="7" x2="5" y2="14"/><line x1="19" y1="7" x2="19" y2="14"/><line x1="5" y1="14" x2="19" y2="14"/><line x1="12" y1="14" x2="12" y2="17"/>', body:'End-to-end network design, installation, and optimization for businesses that demand performance. We offer structured cabling, proactive monitoring, and ongoing troubleshooting.',          features:['Structured cabling (fiber, PoE, wireless alternatives)','Network design, installation, and optimization','Troubleshooting and proactive monitoring for performance'] },
-    webdev:     { title:'Web Development',          icon:'<polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>',                                                                                                                                                                                               body:'We build fast, modern, and professional websites and web applications that represent your brand and work hard for your business — from landing pages to full custom platforms.',           features:['Custom website design & development','Mobile-responsive & SEO-ready builds','E-commerce & booking systems','CMS integration (WordPress, etc.)','Hosting, maintenance & ongoing support'] }
+    security: {
+      title: 'Security Essentials',
+      icon: '<path d="M12 2L3 6v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V6l-9-4z"/><path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/>',
+      body: 'Our Security Essentials package brings together CCTV surveillance, access control, and intercom systems into one cohesive installation. We assess your site and deploy the right combination of technologies to give you complete, layered protection.',
+      features: [
+        'HD CCTV cameras with remote viewing & mobile alerts',
+        'Access control — biometric, card, and keypad entry',
+        'Audio & video intercom systems for entry points',
+        'Integrated setup with a single point of support',
+        'Scalable for homes, offices, and large facilities'
+      ]
+    },
+    networking: {
+      title: 'IT Networking Services',
+      icon: '<rect x="2" y="3" width="6" height="4" rx="1"/><rect x="16" y="3" width="6" height="4" rx="1"/><rect x="9" y="17" width="6" height="4" rx="1"/><line x1="5" y1="7" x2="5" y2="14"/><line x1="19" y1="7" x2="19" y2="14"/><line x1="5" y1="14" x2="19" y2="14"/><line x1="12" y1="14" x2="12" y2="17"/>',
+      body: 'End-to-end network design, installation, and optimization for businesses that demand performance. We offer structured cabling, proactive monitoring, and ongoing troubleshooting.',
+      features: [
+        'Structured cabling (fiber, PoE, wireless alternatives)',
+        'Network design, installation, and optimization',
+        'Troubleshooting and proactive monitoring for performance'
+      ]
+    },
+    webdev: {
+      title: 'Web Development',
+      icon: '<polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>',
+      body: 'We build fast, modern, and professional websites and web applications that represent your brand and work hard for your business — from landing pages to full custom platforms.',
+      features: [
+        'Custom website design & development',
+        'Mobile-responsive & SEO-ready builds',
+        'E-commerce & booking systems',
+        'CMS integration (WordPress, etc.)',
+        'Hosting, maintenance & ongoing support'
+      ]
+    }
   };
 
   function openModal(key) {
     const s = services[key];
-    document.getElementById('modalTitle').textContent = s.title;
-    document.getElementById('modalIcon').innerHTML    = s.icon;
-    document.getElementById('modalBody').textContent  = s.body;
+    document.getElementById('modalTitle').textContent  = s.title;
+    document.getElementById('modalIcon').innerHTML     = s.icon;
+    document.getElementById('modalBody').textContent   = s.body;
     document.getElementById('modalFeatures').innerHTML = s.features.map(f => '<li>' + f + '</li>').join('');
     const sel = document.getElementById('quoteService');
     for(let i = 0; i < sel.options.length; i++){ if(sel.options[i].text === s.title){ sel.selectedIndex = i; break; } }
     document.getElementById('modalOverlay').classList.add('open');
     document.body.style.overflow = 'hidden';
   }
-  function closeModal(e)     { if(e.target === document.getElementById('modalOverlay')) closeModalDirect(); }
-  function closeModalDirect(){ document.getElementById('modalOverlay').classList.remove('open'); document.body.style.overflow = ''; }
+  function closeModal(e)      { if(e.target === document.getElementById('modalOverlay')) closeModalDirect(); }
+  function closeModalDirect() { document.getElementById('modalOverlay').classList.remove('open'); document.body.style.overflow = ''; }
   document.addEventListener('keydown', e => { if(e.key === 'Escape') closeModalDirect(); });
 
-  // ── QUOTE ─────────────────────────────────────────────
+  // ── QUOTE FORM ────────────────────────────────────────
   function handleSubmit(e) {
     e.preventDefault();
     const btn = e.target.querySelector('.quote__submit');
